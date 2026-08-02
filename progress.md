@@ -32,6 +32,7 @@
 - Used `/istm-craft` to architect and write feature spec for `.istm-context/specs/0001-repository-caching.md`.
 - Used `/develop` to successfully implement the spec, persisting repository state using TanStack Query.
 - Verified dogfood-testing of the open-source `@istmx/skills` Agentic Orchestration Framework (v1.1.0) and confirmed it successfully constrains the LLM to write structured, modular code.
+- Unified the Repository Detail Page and Pull Requests Dashboard by implementing spec 0003, auto-syncing repositories and showing CodeCat AI features on the dashboard.
 
 ### Pending
 

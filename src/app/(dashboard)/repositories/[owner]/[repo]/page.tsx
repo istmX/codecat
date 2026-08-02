@@ -1,5 +1,6 @@
-import { getRepository } from "@/features/repositories/actions/repository-actions";
-import { ConnectRepoButton } from "@/features/repositories/components/connect-repo-button";
+import { autoSyncRepository } from "@/features/repositories/actions/repository-actions";
+import { RepositoryDashboardClient } from "@/features/repositories/components/repository-dashboard-client";
+import { getPullRequestsWithStatus } from "@/features/pull-requests/actions/pull-actions";
 import { InteractiveMascot } from "@/components/shared/interactive-mascot";
 import { ROUTES } from "@/lib/utils/constants";
 import Link from "next/link";
@@ -28,10 +29,12 @@ export default async function RepositoryDetailPage({ params }: Props) {
   const { owner, repo } = await params;
   
   let repository;
+  let initialPrData = [];
   try {
-    repository = await getRepository(owner, repo);
+    repository = await autoSyncRepository(owner, repo);
+    initialPrData = await getPullRequestsWithStatus(owner, repo);
   } catch (error) {
-    console.error("Failed to fetch repository:", error);
+    console.error("Failed to fetch repository or pull requests:", error);
     notFound();
   }
 
@@ -113,49 +116,19 @@ export default async function RepositoryDetailPage({ params }: Props) {
           </div>
 
           <div className="flex-shrink-0 flex items-center gap-3 pt-2 md:pt-0">
-            <ConnectRepoButton 
-              githubId={repository.githubId} 
-              initialConnected={repository.isConnected} 
-            />
+            {/* The Connect Repo button is now removed in favor of auto-sync. */}
           </div>
         </header>
 
-        {/* Content Tabs / Sections */}
+        {/* Unified Repository Dashboard (Pull Requests) */}
+        <div className="w-full mb-8">
+          <RepositoryDashboardClient owner={owner} repo={repo} initialData={initialPrData} />
+        </div>
+
+        {/* Settings / Additional Info */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="md:col-span-2 flex flex-col gap-6">
-            <section className="rounded-xl border border-border bg-card overflow-hidden">
-              <div className="p-5 border-b border-border bg-muted/20 flex items-center gap-2">
-                <Activity className="w-5 h-5 text-primary" />
-                <h2 className="text-lg font-semibold">Review Activity</h2>
-              </div>
-              <div className="p-12 flex flex-col items-center justify-center text-center">
-                {repository.isConnected ? (
-                  <>
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                      <GitPullRequest className="w-6 h-6 text-primary" />
-                    </div>
-                    <h3 className="text-base font-medium text-foreground">CodeCat is active</h3>
-                    <p className="text-sm text-muted-foreground mt-1 max-w-sm mb-6">
-                      View your repository's live pull requests to run or check AI reviews.
-                    </p>
-                    <Link
-                      href={`/repositories/${owner}/${repo}/pulls`}
-                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-                    >
-                      View Pull Requests
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    <AlertCircle className="w-12 h-12 text-muted-foreground mb-4" />
-                    <h3 className="text-base font-medium text-foreground">CodeCat Not Connected</h3>
-                    <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                      Click the "Add CodeCat to Repo" button to install the webhook and start analyzing PRs.
-                    </p>
-                  </>
-                )}
-              </div>
-            </section>
+          <div className="md:col-span-2 hidden">
+            {/* Removed the old Review Activity call-to-action */}
           </div>
 
           <aside className="flex flex-col gap-6">
