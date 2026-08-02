@@ -92,4 +92,8 @@ export class GitHubClient {
 
     return res.text();
   }
+
+  async getPullRequestFiles(owner: string, repo: string, number: number): Promise<{ filename: string; patch?: string; status: string }[]> {
+    return this.fetchApi<{ filename: string; patch?: string; status: string }[]>(`/repos/${owner}/${repo}/pulls/${number}/files`);
+  }
 }

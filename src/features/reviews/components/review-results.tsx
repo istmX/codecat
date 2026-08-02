@@ -23,6 +23,17 @@ export function ReviewResults({ pr }: Props) {
   // Placeholder for COMPLETED state (will be hydrated with real data later)
   return (
     <div className="mt-8 space-y-6">
+      <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg border border-border">
+        <div className="flex items-center gap-2">
+          <Info className="w-5 h-5 text-muted-foreground" />
+          <span className="text-sm font-medium">Free Plan Usage</span>
+        </div>
+        <div className="text-sm">
+          <span className="font-semibold text-foreground">{pr.filesProcessed ?? 0}</span>
+          <span className="text-muted-foreground"> / 15 files reviewed</span>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-lg border border-border bg-card">
           <div className="text-sm text-muted-foreground mb-1">Overall Quality</div>

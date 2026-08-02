@@ -46,10 +46,11 @@ export async function getPullRequestWithStatus(owner: string, repo: string, numb
     headRef: pr.head.ref,
     baseRef: pr.base.ref,
     createdAt: pr.created_at,
-    status: review ? (review.status as any) : "UNREVIEWED",
+    status: review ? (review.status as PullRequestWithStatus["status"]) : "UNREVIEWED",
     overallScore: review ? review.overallScore : null,
     prState: pr.merged_at ? "merged" : pr.state === "closed" ? "closed" : "open",
     findings: review ? review.findings : [],
+    filesProcessed: review ? review.filesProcessed : undefined,
   };
 }
 
@@ -57,6 +58,12 @@ export async function startReview(owner: string, repo: string, number: number) {
   const session = await auth();
   if (!session?.userId || !session.accessToken) {
     throw new Error("Unauthorized");
+  }
+
+  const { checkRateLimit } = await import("@/lib/rate-limit");
+  const rateLimitResult = await checkRateLimit(session.userId);
+  if (!rateLimitResult.allowed) {
+    throw new Error(`Review limit reached. Try again in ${rateLimitResult.waitTimeMinutes} mins.`);
   }
 
   const dbRepo = await prisma.repository.findFirst({
@@ -70,7 +77,18 @@ export async function startReview(owner: string, repo: string, number: number) {
   // Fetch the PR again to get the missing fields for creation
   const githubClient = new GitHubClient(session.accessToken);
   const pr = await githubClient.getPullRequest(owner, repo, number);
-  const diff = await githubClient.getPullRequestDiff(owner, repo, number);
+  const files = await githubClient.getPullRequestFiles(owner, repo, number);
+
+  // Filter and limit files
+  const filteredFiles = files.filter(f => f.status !== "removed" && !f.filename.endsWith(".md"));
+  const maxFiles = 15; // Free plan limit
+  const filesToReview = filteredFiles.slice(0, maxFiles);
+  
+  // Reconstruct a diff for the AI
+  const diffString = filesToReview
+    .filter(f => f.patch)
+    .map(f => `--- a/${f.filename}\n+++ b/${f.filename}\n${f.patch}`)
+    .join("\n\n");
 
   const review = await prisma.review.upsert({
     where: {
@@ -81,6 +99,7 @@ export async function startReview(owner: string, repo: string, number: number) {
     },
     update: {
       status: "RUNNING",
+      filesProcessed: filesToReview.length,
     },
     create: {
       repositoryId: dbRepo.id,
@@ -91,11 +110,12 @@ export async function startReview(owner: string, repo: string, number: number) {
       branch: pr.head.ref,
       baseBranch: pr.base.ref,
       status: "RUNNING",
+      filesProcessed: filesToReview.length,
     },
   });
 
   revalidatePath(`/repositories/${owner}/${repo}/pulls/${number}`);
 
   // Kick off the AI review engine in the background
-  runReviewEngine(review.id, diff).catch(console.error);
+  runReviewEngine(review.id, diffString).catch(console.error);
 }

@@ -16,4 +16,5 @@ export interface PullRequestWithStatus {
   overallScore?: number | null;
   prState: "open" | "merged" | "closed";
   findings?: Finding[];
+  filesProcessed?: number;
 }

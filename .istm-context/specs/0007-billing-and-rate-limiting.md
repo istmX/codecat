@@ -1,6 +1,6 @@
 # 0007: Billing, Plans, and Rate Limiting
 
-**Status**: Draft
+**Status**: Accepted
 
 ## Summary
 To ensure sustainability, CodeCat will introduce a "Free Plan" with specific usage limits. This feature will track the number of tokens/files processed per review, enforce rate limits (e.g., reviews per hour), and provide clear UI feedback when a limit is reached ("Review limit reached, try again in XX mins").
@@ -25,7 +25,7 @@ To ensure sustainability, CodeCat will introduce a "Free Plan" with specific usa
 - **Review Model**: Add `filesProcessed` (Int).
 
 ## Build Plan
-1. Update Prisma schema to track `planTier` on `User` and `filesProcessed` on `Review`.
-2. Implement a rate-limiting utility in `src/lib/rate-limit.ts` to calculate time until the next allowed review.
-3. Update `startReview` action to enforce limits before Upserting a review, throwing a specific Error if rate limited.
-4. Update `ReviewRunner` UI to catch rate limit errors and display the countdown.
+1. [x] Update Prisma schema to track `planTier` on `User` and `filesProcessed` on `Review`.
+2. [x] Implement a rate-limiting utility in `src/lib/rate-limit.ts` to calculate time until the next allowed review.
+3. [x] Update `startReview` action to enforce limits before Upserting a review, throwing a specific Error if rate limited.
+4. [x] Update `ReviewRunner` UI to catch rate limit errors and display the countdown.

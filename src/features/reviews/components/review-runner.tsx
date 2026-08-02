@@ -13,12 +13,15 @@ interface Props {
 
 export function ReviewRunner({ owner, repo, number }: Props) {
   const [isPending, startTransition] = useTransition();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleStart = () => {
+    setErrorMsg(null);
     startTransition(async () => {
       try {
         await startReview(owner, repo, number);
-      } catch (error) {
+      } catch (error: any) {
+        setErrorMsg(error.message || "An error occurred");
         console.error(error);
       }
     });
@@ -33,6 +36,12 @@ export function ReviewRunner({ owner, repo, number }: Props) {
       <p className="text-muted-foreground mb-8 max-w-md mx-auto">
         Run CodeCat's specialist AI reviewers on this pull request to get deep insights on architecture, security, and performance.
       </p>
+
+      {errorMsg && (
+        <div className="mb-6 p-4 rounded-md bg-destructive/10 text-destructive text-sm max-w-md mx-auto text-left border border-destructive/20">
+          {errorMsg}
+        </div>
+      )}
       
       <motion.button
         whileHover={{ scale: 1.02 }}
