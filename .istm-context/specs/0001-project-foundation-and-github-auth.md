@@ -2,6 +2,8 @@
 
 ## Summary
 
+**Status**: Accepted
+
 Set up the entire project foundation (directory structure, dependencies, design token configuration, Prisma schema, database connection) and implement GitHub OAuth authentication using Auth.js v5. This is the entry gate for the application. No other feature can function without it.
 
 This spec covers two things that must ship together:
