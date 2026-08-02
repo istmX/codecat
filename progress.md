@@ -12,15 +12,16 @@
   - `.istm-context/project-overview.md` (vision, user journeys, screen inventory)
 - Executed Self-Destruct Rule: wrote agents.md to all 6 root harness files
 - Created progress.md and error-memory.md tracking files
+- Installed project dependencies (shadcn/ui, Prisma, Auth.js, AI SDK, TanStack Query, etc.)
+- Initialized Prisma schema and configured Neon PostgreSQL driver
+- Set up Auth.js with GitHub OAuth provider configuration
+- Applied comprehensive CodeRabbit x GitHub UI aesthetic via Tailwind v4 and shadcn
+- Built Awwwards-style Landing Page and ultra-premium Sign-in Page
 
 ### Pending
 
-- Install project dependencies (shadcn/ui, Prisma, Auth.js, AI SDK, TanStack Query, etc.)
-- Initialize Prisma schema and run initial migration
-- Set up Auth.js with GitHub OAuth provider
-- Build feature modules (auth, repositories, pull-requests, reviews, diff-viewer)
-- Implement AI Review Engine with provider fallback
-- Build UI components following design tokens
+- Build feature modules (repositories, pull-requests, reviews, diff-viewer)
+- Implement AI Review Engine with provider fallback (Groq, Mistral, Gemini)
 
 ### Notes
 
