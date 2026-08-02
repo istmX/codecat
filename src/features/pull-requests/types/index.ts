@@ -1,3 +1,5 @@
+import { Finding } from "@prisma/client";
+
 export interface PullRequestWithStatus {
   id: string;
   number: number;
@@ -12,5 +14,8 @@ export interface PullRequestWithStatus {
   createdAt: string;
   status: "UNREVIEWED" | "PENDING" | "RUNNING" | "COMPLETED" | "FAILED";
   overallScore?: number | null;
+  summary?: string | null;
   prState: "open" | "merged" | "closed";
+  findings?: Finding[];
+  filesProcessed?: number;
 }

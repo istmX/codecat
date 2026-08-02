@@ -1,6 +1,6 @@
 # 0006: AI Review Engine
 
-**Status**: Draft
+**Status**: Accepted
 
 ## Summary
 The core of CodeCat is its specialist AI Review Engine. When a user clicks "Run CodeCat Review", we need to orchestrate multiple specialized AI prompts (Architecture, Security, Performance) against the PR's diff, aggregate the findings, and save them to the database. We will use the Vercel AI SDK with a provider fallback chain (Groq -> Mistral -> Gemini) to ensure reliability and speed.

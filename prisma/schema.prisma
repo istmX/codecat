@@ -20,6 +20,7 @@ model User {
   reviews       Review[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  planTier      String    @default("FREE")
 }
 
 model Account {
@@ -80,8 +81,11 @@ model Review {
   repositoryId   String
   repository     Repository     @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
   findings       Finding[]
+  filesProcessed Int            @default(0)
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
+
+  @@unique([repositoryId, pullNumber])
 }
 
 model Finding {

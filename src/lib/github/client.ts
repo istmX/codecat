@@ -74,4 +74,26 @@ export class GitHubClient {
   async getRepositoryPullRequests(owner: string, repo: string, limit: number = 30, state: "open" | "closed" | "all" = "all"): Promise<GithubPullRequest[]> {
     return this.fetchApi<GithubPullRequest[]>(`/repos/${owner}/${repo}/pulls?state=${state}&per_page=${limit}&sort=created&direction=desc`);
   }
+
+  async getPullRequest(owner: string, repo: string, number: number): Promise<GithubPullRequest> {
+    return this.fetchApi<GithubPullRequest>(`/repos/${owner}/${repo}/pulls/${number}`);
+  }
+  async getPullRequestDiff(owner: string, repo: string, number: number): Promise<string> {
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/pulls/${number}`, {
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+        Accept: "application/vnd.github.v3.diff",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`GitHub API error: ${res.statusText}`);
+    }
+
+    return res.text();
+  }
+
+  async getPullRequestFiles(owner: string, repo: string, number: number): Promise<{ filename: string; patch?: string; status: string }[]> {
+    return this.fetchApi<{ filename: string; patch?: string; status: string }[]>(`/repos/${owner}/${repo}/pulls/${number}/files`);
+  }
 }

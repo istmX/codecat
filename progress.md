@@ -46,3 +46,6 @@
 - Single tenant per user (no org level tenancy for MVP)
 - No real time streaming for reviews (run all reviewers, show complete result)
 - Implemented spec 0005: Merged PRs dashboard section
+- Implemented spec 0004: PR Review Runner and Results UI
+- Implemented Spec 0006: AI Review Engine (Groq -> Mistral -> Gemini)
+- Implemented Spec 0007: Billing and rate limiting (Free Plan limits, files filtering)
