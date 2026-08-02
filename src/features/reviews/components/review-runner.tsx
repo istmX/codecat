@@ -20,7 +20,8 @@ export function ReviewRunner({ owner, repo, number }: Props) {
     startTransition(async () => {
       try {
         await startReview(owner, repo, number);
-        // The actual results will be handled by the layout's polling fetching COMPLETED status
+        // Dismiss the loading toast since we hand off to the polling screen
+        toast.dismiss(toastId);
       } catch (error: any) {
         const msg = error.message || "An error occurred";
         if (msg.toLowerCase().includes("limit reached") || msg.toLowerCase().includes("rate limit")) {

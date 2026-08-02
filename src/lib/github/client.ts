@@ -107,7 +107,7 @@ export class GitHubClient {
     try {
       const app = new App({
         appId: process.env.GITHUB_APP_ID,
-        privateKey: process.env.GITHUB_APP_PRIVATE_KEY,
+        privateKey: process.env.GITHUB_APP_PRIVATE_KEY.replace(/\\n/g, "\n"),
       });
       const { data: installation } = await app.octokit.request("GET /repos/{owner}/{repo}/installation", {
         owner,
