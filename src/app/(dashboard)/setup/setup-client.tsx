@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { checkGithubAppInstallation } from "@/features/auth/actions/user-actions";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Loader2, Plug } from "lucide-react";
+import { Loader2, ExternalLink } from "lucide-react";
 
 export function SetupClient() {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +20,7 @@ export function SetupClient() {
       const res = await checkGithubAppInstallation();
       if (res.installed) {
         toast.success("GitHub App verified! Welcome to CodeCat.");
-        router.push("/");
+        router.push("/dashboard");
         router.refresh();
       } else {
         toast.error("CodeCat is not installed yet. Please install it to continue.");
@@ -39,7 +39,7 @@ export function SetupClient() {
         className="w-full h-12 text-md font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
         onClick={() => window.open(GITHUB_APP_URL, "_blank")}
       >
-        <Plug className="mr-2 h-5 w-5" />
+        <ExternalLink className="mr-2 h-5 w-5" />
         Install CodeCat on GitHub
       </Button>
       

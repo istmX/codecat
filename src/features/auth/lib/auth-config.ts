@@ -22,7 +22,9 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       const isDashboard = nextUrl.pathname.startsWith("/dashboard") ||
         nextUrl.pathname.startsWith("/repositories") ||
-        nextUrl.pathname.startsWith("/settings");
+        nextUrl.pathname.startsWith("/settings") ||
+        nextUrl.pathname.startsWith("/profile") ||
+        nextUrl.pathname.startsWith("/setup");
 
       if (isDashboard) {
         return isLoggedIn;
