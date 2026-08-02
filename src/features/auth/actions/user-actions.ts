@@ -5,10 +5,10 @@ import { prisma as db } from "@/lib/db/prisma";
 
 export async function checkGithubAppInstallation() {
   const session = await auth();
-  if (!session?.user?.id) return { installed: false };
+  if (!session?.userId) return { installed: false };
 
   const account = await db.account.findFirst({
-    where: { userId: session.user.id, provider: "github" },
+    where: { userId: session.userId, provider: "github" },
   });
 
   if (!account?.access_token) return { installed: false };
@@ -28,7 +28,7 @@ export async function checkGithubAppInstallation() {
     
     if (installed) {
       await db.user.update({
-        where: { id: session.user.id },
+        where: { id: session.userId },
         data: { githubAppInstalled: true }
       });
     }
@@ -41,10 +41,10 @@ export async function checkGithubAppInstallation() {
 
 export async function upgradeToPro() {
   const session = await auth();
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  if (!session?.userId) throw new Error("Unauthorized");
   
   await db.user.update({
-    where: { id: session.user.id },
+    where: { id: session.userId },
     data: { planTier: "PRO" }
   });
   

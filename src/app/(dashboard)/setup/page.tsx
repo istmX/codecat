@@ -5,17 +5,17 @@ import { SetupClient } from "./setup-client";
 
 export default async function SetupPage() {
   const session = await auth();
-  if (!session?.user?.id) {
+  if (!session?.userId) {
     redirect("/");
   }
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: session.userId },
     select: { githubAppInstalled: true },
   });
 
   if (user?.githubAppInstalled) {
-    redirect("/");
+    redirect("/dashboard");
   }
 
   return (
