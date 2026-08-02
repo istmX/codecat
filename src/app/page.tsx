@@ -3,9 +3,10 @@ import { SignInButton } from "@/features/auth/components/sign-in-button";
 import { APP_NAME, APP_TAGLINE } from "@/lib/utils/constants";
 import { Shield, Zap, GitPullRequest, ArrowRight } from "lucide-react";
 import * as motion from "framer-motion/client";
+import { Variants } from "framer-motion";
 
 export default function LandingPage() {
-  const container = {
+  const container: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -16,7 +17,7 @@ export default function LandingPage() {
     },
   };
 
-  const itemY = {
+  const itemY: Variants = {
     hidden: { opacity: 0, y: 40, scale: 0.95 },
     show: {
       opacity: 1,
@@ -26,7 +27,7 @@ export default function LandingPage() {
     },
   };
 
-  const itemX = {
+  const itemX: Variants = {
     hidden: { opacity: 0, x: -20 },
     show: {
       opacity: 1,

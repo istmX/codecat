@@ -23,6 +23,11 @@
 - Added "CodeCat Central" mini-toolbar modal triggered by clicking the roaming mascot.
 - Implemented deep Mascot branding (Easter eggs: 'cat' keyboard zoomies, 10-click fish achievement, dynamic quotes).
 - Finalized Auth: wired up robust Next.js Server Action Sign Out via form action in UserMenu.
+- Designed and built Repository UI Flow: created mock data layer, updated Dashboard with recent repositories, built dedicated `/repositories` list page, and implemented specific `/repositories/[owner]/[repo]` detail page with interactive 'Add CodeCat' CTA button.
+- Implemented Repositories Backend Logic: Integrated GitHub REST API to fetch user repos using OAuth `access_token`. Built Next.js Server Actions to connect/disconnect repositories and store them in Prisma Neon PostgreSQL. Replaced all mock data with real database and API connections.
+- Fixed GitHub OAuth scope request by forcing `prompt: "consent"` to ensure the `repo` scope is properly requested, handling existing tokens correctly.
+- Resolved "Invalid Server Actions request" CSRF error in GitHub Codespaces by configuring `allowedOrigins` in `next.config.ts`.
+- Extracted Repositories filter UI to a Client Component (`RepositoryListClient`), fixing Next.js 14+ Server/Client Component boundary typing issues.
 
 ### Pending
 
