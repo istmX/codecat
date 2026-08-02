@@ -17,6 +17,10 @@
 - Set up Auth.js with GitHub OAuth provider configuration (Database persistence fixed)
 - Applied comprehensive CodeRabbit x GitHub UI aesthetic via Tailwind v4 and shadcn
 - Built Awwwards-style Landing Page and ultra-premium Sign-in Page
+- Expanded Landing Page: Added "Cost of Bad Code", "Meet the Agents", "ROI Metrics" and "FAQ" sections with Framer Motion `useInView` scroll physics.
+- Replaced direct GitHub OAuth buttons with dedicated "Get Started" funnels routing to `/sign-in`.
+- Generated and configured a premium `favicon.ico` and `icon.png` (using proper RGBA format) from the CodeCat Mascot face.
+- Refactored `CodeCatLogo` to use the static image for consistency across all branding.
 - Fixed Next.js Routing conflict (`(dashboard)` renaming)
 - Redesigned CodeCat SVG Mascot: ditched the cyber-cat for a fat, dark purple body with retro 3D hacker glasses.
 - Built InteractiveMascot with Framer Motion and integrated into Dashboard (draggable, fully bounded to viewport, animated walking legs, interactive hover quotes).
