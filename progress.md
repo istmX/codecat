@@ -33,6 +33,10 @@
 - Used `/develop` to successfully implement the spec, persisting repository state using TanStack Query.
 - Verified dogfood-testing of the open-source `@istmx/skills` Agentic Orchestration Framework (v1.1.0) and confirmed it successfully constrains the LLM to write structured, modular code.
 - Unified the Repository Detail Page and Pull Requests Dashboard by implementing spec 0003, auto-syncing repositories and showing CodeCat AI features on the dashboard.
+- Integrated GitHub App Authentication and API credentials (`GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`) to post comments as the official CodeCat bot.
+- Built GitHub Webhook API route to automatically trigger PR reviews on `pull_request` (`opened`, `synchronize`) events.
+- Refactored the Webhook Queue system to pre-check Rate Limits and immediately post warning comments on GitHub if the user is out of credits.
+- Fixed unhandled Next.js Server Action errors by returning clean error objects and rendering beautiful, inline Error UI States (e.g. Rate Limit warnings) without breaking the client.
 
 ### Pending
 
