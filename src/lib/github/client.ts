@@ -1,3 +1,5 @@
+import { App } from "@octokit/app";
+
 export interface GithubRepository {
   id: number;
   name: string;
@@ -97,7 +99,39 @@ export class GitHubClient {
     return this.fetchApi<{ filename: string; patch?: string; status: string }[]>(`/repos/${owner}/${repo}/pulls/${number}/files`);
   }
 
+  private async getAppOctokit(owner: string, repo: string) {
+    if (!process.env.GITHUB_APP_ID || !process.env.GITHUB_APP_PRIVATE_KEY) {
+      return null;
+    }
+    
+    try {
+      const app = new App({
+        appId: process.env.GITHUB_APP_ID,
+        privateKey: process.env.GITHUB_APP_PRIVATE_KEY,
+      });
+      const { data: installation } = await app.octokit.request("GET /repos/{owner}/{repo}/installation", {
+        owner,
+        repo,
+      });
+      return await app.getInstallationOctokit(installation.id);
+    } catch (e) {
+      console.warn("Could not get App Installation Octokit. Falling back to user token.");
+      return null;
+    }
+  }
+
   async createIssueComment(owner: string, repo: string, issueNumber: number, body: string): Promise<{ id: number; html_url: string }> {
+    const appOctokit = await this.getAppOctokit(owner, repo);
+    if (appOctokit) {
+      const res = await appOctokit.request("POST /repos/{owner}/{repo}/issues/{issue_number}/comments", {
+        owner,
+        repo,
+        issue_number: issueNumber,
+        body,
+      });
+      return { id: res.data.id, html_url: res.data.html_url };
+    }
+
     return this.fetchApi<{ id: number; html_url: string }>(`/repos/${owner}/${repo}/issues/${issueNumber}/comments`, {
       method: "POST",
       body: JSON.stringify({ body }),
@@ -105,6 +139,17 @@ export class GitHubClient {
   }
 
   async updateIssueComment(owner: string, repo: string, commentId: number, body: string): Promise<{ id: number; html_url: string }> {
+    const appOctokit = await this.getAppOctokit(owner, repo);
+    if (appOctokit) {
+      const res = await appOctokit.request("PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}", {
+        owner,
+        repo,
+        comment_id: commentId,
+        body,
+      });
+      return { id: res.data.id, html_url: res.data.html_url };
+    }
+
     return this.fetchApi<{ id: number; html_url: string }>(`/repos/${owner}/${repo}/issues/comments/${commentId}`, {
       method: "PATCH",
       body: JSON.stringify({ body }),
