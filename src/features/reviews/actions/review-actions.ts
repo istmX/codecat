@@ -5,6 +5,7 @@ import { GitHubClient } from "@/lib/github/client";
 import { prisma } from "@/lib/db/prisma";
 import { PullRequestWithStatus } from "@/features/pull-requests/types";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { runReviewEngine } from "@/lib/ai/engine";
 
 export async function getPullRequestWithStatus(owner: string, repo: string, number: number): Promise<PullRequestWithStatus> {
@@ -68,7 +69,8 @@ export async function internalStartReview(owner: string, repo: string, number: n
   const { checkRateLimit } = await import("@/lib/rate-limit");
   const rateLimitResult = await checkRateLimit(userId);
   if (!rateLimitResult.allowed) {
-    throw new Error(`Review limit reached. Try again in ${rateLimitResult.waitTimeMinutes} mins.`);
+    const mins = rateLimitResult.waitTimeMinutes;
+    throw new Error(`Review limit reached. Try again in ${mins} min${mins === 1 ? '' : 's'}.`);
   }
 
   const dbRepo = await prisma.repository.findFirst({
@@ -105,6 +107,8 @@ export async function internalStartReview(owner: string, repo: string, number: n
     update: {
       status: "RUNNING",
       filesProcessed: filesToReview.length,
+      overallScore: null,
+      summary: null,
     },
     create: {
       repositoryId: dbRepo.id,
@@ -121,6 +125,7 @@ export async function internalStartReview(owner: string, repo: string, number: n
 
   revalidatePath(`/repositories/${owner}/${repo}/pulls/${number}`);
 
-  // Kick off the AI review engine in the background
-  runReviewEngine(review.id, diffString).catch(console.error);
+  after(() => {
+    runReviewEngine(review.id, diffString).catch(console.error);
+  });
 }

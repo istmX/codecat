@@ -4,6 +4,7 @@ import { ReviewResults } from "@/features/reviews/components/review-results";
 import { GitPullRequest, GitMerge, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 interface PageProps {
   params: Promise<{
@@ -15,7 +16,14 @@ interface PageProps {
 
 export default async function PRReviewPage({ params }: PageProps) {
   const { owner, repo, number } = await params;
+  
+  if (!/^\d+$/.test(number)) {
+    notFound();
+  }
   const prNumber = parseInt(number, 10);
+  if (prNumber <= 0 || !Number.isSafeInteger(prNumber)) {
+    notFound();
+  }
 
   const pr = await getPullRequestWithStatus(owner, repo, prNumber);
 

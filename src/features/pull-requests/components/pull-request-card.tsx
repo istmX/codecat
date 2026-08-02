@@ -59,15 +59,15 @@ export function PullRequestCard({ pr, owner, repo }: { pr: PullRequestWithStatus
               <GitMerge size={12} />
               <span className="px-1.5 py-0.5 rounded bg-muted/50 border border-border/50 truncate max-w-[150px]">{pr.headRef}</span>
             </div>
+            
+            {pr.summary && (
+              <div className="mt-3 text-sm text-muted-foreground p-2 bg-muted/30 rounded border border-border/50">
+                <span className="font-semibold text-foreground/80 text-xs uppercase tracking-wider block mb-1">AI Summary</span>
+                {pr.summary}
+              </div>
+            )}
           </div>
         </div>
-        
-        {pr.summary && (
-          <div className="mt-3 text-sm text-muted-foreground p-2 bg-muted/30 rounded border border-border/50">
-            <span className="font-semibold text-foreground/80 text-xs uppercase tracking-wider block mb-1">AI Summary</span>
-            {pr.summary}
-          </div>
-        )}
         
         <div className="flex flex-col items-end gap-2 flex-shrink-0">
           {getStatusBadge(pr.status)}

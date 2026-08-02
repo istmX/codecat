@@ -8,7 +8,7 @@ interface Props {
 }
 
 export function ReviewResults({ pr }: Props) {
-  if (pr.status === "RUNNING") {
+  if (pr.status === "RUNNING" || pr.status === "PENDING") {
     return (
       <div className="flex flex-col items-center justify-center p-24 text-center border border-border rounded-lg bg-card mt-8">
         <Loader2 className="w-12 h-12 text-primary animate-spin mb-6" />
@@ -18,6 +18,22 @@ export function ReviewResults({ pr }: Props) {
         </p>
       </div>
     );
+  }
+
+  if (pr.status === "FAILED") {
+    return (
+      <div className="flex flex-col items-center justify-center p-24 text-center border border-destructive/30 rounded-lg bg-destructive/10 mt-8">
+        <AlertCircle className="w-12 h-12 text-destructive mb-6" />
+        <h2 className="text-2xl font-bold text-destructive mb-3">Review Failed</h2>
+        <p className="text-destructive max-w-md mx-auto">
+          An error occurred while running the AI review engine. Please try again.
+        </p>
+      </div>
+    );
+  }
+
+  if (pr.status !== "COMPLETED") {
+    return null; // Should not reach here, but protects against rendering results
   }
 
   const generateMasterPrompt = () => {
