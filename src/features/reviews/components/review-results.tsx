@@ -2,12 +2,26 @@
 
 import { Loader2, CheckCircle2, AlertTriangle, AlertCircle, Info } from "lucide-react";
 import { PullRequestWithStatus } from "@/features/pull-requests/types";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface Props {
   pr: PullRequestWithStatus;
 }
 
 export function ReviewResults({ pr }: Props) {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (pr.status === "RUNNING" || pr.status === "PENDING") {
+      const interval = setInterval(() => {
+        router.refresh();
+      }, 5000); // Poll every 5 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [pr.status, router]);
+
   if (pr.status === "RUNNING" || pr.status === "PENDING") {
     return (
       <div className="flex flex-col items-center justify-center p-24 text-center border border-border rounded-lg bg-card mt-8">

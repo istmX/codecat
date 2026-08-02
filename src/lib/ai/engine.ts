@@ -53,12 +53,22 @@ export async function runReviewEngine(reviewId: string, diff: string) {
     let summaryText = `Completed review with ${allFindings.length} findings.`;
     if (allFindings.length > 0) {
       try {
-        const { text } = await generateText({
-          model: models.groq,
-          system: "You are an AI code reviewer. Provide a very brief 2-sentence summary of the main issues found in the PR. Focus only on the most critical themes.",
-          prompt: `Here are the findings:\n${allFindings.map(f => `- [${f.category}] ${f.title}`).join('\n')}`,
-        });
-        summaryText = text;
+        const runSummary = async (attempt: number = 0): Promise<string> => {
+          if (attempt >= modelKeys.length) return `Completed review with ${allFindings.length} findings.`;
+          const modelKey = modelKeys[attempt];
+          try {
+            const { text } = await generateText({
+              model: models[modelKey],
+              system: "You are an AI code reviewer. Provide a very brief 2-sentence summary of the main issues found in the PR. Focus only on the most critical themes.",
+              prompt: `Here are the findings:\n${allFindings.map(f => `- [${f.category}] ${f.title}`).join('\n')}`,
+            });
+            return text;
+          } catch (error) {
+            console.warn(`Summary failed for model ${modelKey}. Retrying with fallback...`, error);
+            return runSummary(attempt + 1);
+          }
+        };
+        summaryText = await runSummary();
       } catch (error) {
         console.error("Failed to generate AI summary, using default", error);
       }

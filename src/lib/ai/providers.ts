@@ -17,7 +17,7 @@ const google = createGoogleGenerativeAI({
 
 // The fallback chain: Groq -> Mistral -> Gemini
 export const models = {
-  groq: groq("llama-3.1-70b-versatile"), // primary
+  groq: groq("llama-3.1-8b-instant"), // primary
   mistral: mistral("mistral-large-latest"), // fallback 1
   gemini: google("gemini-3.5-flash"), // fallback 2
 };
