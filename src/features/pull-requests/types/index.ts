@@ -12,4 +12,5 @@ export interface PullRequestWithStatus {
   createdAt: string;
   status: "UNREVIEWED" | "PENDING" | "RUNNING" | "COMPLETED" | "FAILED";
   overallScore?: number | null;
+  prState: "open" | "merged" | "closed";
 }

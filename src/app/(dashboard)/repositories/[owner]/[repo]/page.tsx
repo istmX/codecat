@@ -105,7 +105,7 @@ export default async function RepositoryDetailPage({ params }: Props) {
               
               <div className="flex items-center gap-1.5" title="Open Pull Requests">
                 <GitPullRequest className="w-4 h-4" />
-                <span>{repository.openPullRequests}</span>
+                <span>{initialPrData.length}</span>
               </div>
 
               <div className="flex items-center gap-1.5" title="Last Updated">

@@ -23,8 +23,9 @@ export function RepositoryDashboardClient({ owner, repo, initialData }: Props) {
     );
   }
 
-  const reviewedPrs = pullRequests?.filter(pr => pr.status !== "UNREVIEWED") || [];
-  const unreviewedPrs = pullRequests?.filter(pr => pr.status === "UNREVIEWED") || [];
+  const reviewedPrs = pullRequests?.filter(pr => pr.status !== "UNREVIEWED" && pr.prState === "open") || [];
+  const unreviewedPrs = pullRequests?.filter(pr => pr.status === "UNREVIEWED" && pr.prState === "open") || [];
+  const mergedPrs = pullRequests?.filter(pr => pr.prState === "merged") || [];
 
   return (
     <div className="flex flex-col gap-12">
@@ -61,11 +62,27 @@ export function RepositoryDashboardClient({ owner, repo, initialData }: Props) {
             ))
           ) : (
             <div className="text-center p-8 border border-border rounded-lg bg-card text-muted-foreground">
-              No unreviewed pull requests found.
+              No open unreviewed pull requests found.
             </div>
           )}
         </div>
       </section>
+
+      {mergedPrs.length > 0 && (
+        <section>
+          <h2 className="text-xl font-semibold mb-4 text-foreground flex items-center gap-2">
+            Merged PRs
+            <span className="bg-muted text-muted-foreground text-xs px-2 py-1 rounded-full font-medium">
+              {mergedPrs.length}
+            </span>
+          </h2>
+          <div className="flex flex-col gap-3">
+            {mergedPrs.map((pr) => (
+              <PullRequestCard key={pr.id} pr={pr} owner={owner} repo={repo} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
