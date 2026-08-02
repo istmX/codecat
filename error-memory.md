@@ -25,3 +25,9 @@ Each entry follows this structure:
 - **Root Cause**: The Prisma schema mapped `User` with strictly required custom fields (`githubId`, `accessToken`) and omitted fields the Auth.js default adapter expects (`emailVerified`). Auth.js manages OAuth provider details in the `Account` model, not the `User` model.
 - **Fix**: Removed `githubId` and `accessToken` from `User` (they belong in `Account`), and added `emailVerified DateTime?`.
 - **Prevention**: Always use the standard Auth.js Prisma schema for the `User`, `Account`, and `Session` models. Do not add provider-specific required fields directly to the `User` model.
+
+### 2026-08-02 — Next.js 15+ Params Promise 404
+- **Symptom**: `GitHub API error: 404 Not Found` when fetching `https://api.github.com/repos/undefined/undefined/pulls`.
+- **Root Cause**: In Next.js 15+ (App Router), page and layout `params` are `Promise`s. Trying to synchronously access `params.owner` results in `undefined`.
+- **Fix**: Changed `params` type to `Promise<{owner: string, repo: string}>` and added `const { owner, repo } = await params;` before using the parameters.
+- **Prevention**: Always `await` the `params` prop in Next.js 15+ App Router Server Components before accessing route parameters.
