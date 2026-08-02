@@ -69,8 +69,8 @@ export function ReviewResults({ pr }: Props) {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-lg border border-border bg-card">
           <div className="text-sm text-muted-foreground mb-1">Overall Quality</div>
-          <div className={`text-3xl font-bold ${pr.overallScore && pr.overallScore >= 8 ? 'text-emerald-500' : pr.overallScore && pr.overallScore >= 5 ? 'text-amber-500' : 'text-red-500'}`}>
-            {pr.overallScore ? `${pr.overallScore.toFixed(1)}/10` : '-/10'}
+          <div className={`text-3xl font-bold ${(pr.overallScore ?? -1) >= 8 ? 'text-emerald-500' : (pr.overallScore ?? -1) >= 5 ? 'text-amber-500' : 'text-red-500'}`}>
+            {pr.overallScore != null ? `${pr.overallScore.toFixed(1)}/10` : '-/10'}
           </div>
         </div>
         <div className="p-4 rounded-lg border border-border bg-card">
