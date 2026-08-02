@@ -1,6 +1,7 @@
 import { internalStartReview } from "@/features/reviews/actions/review-actions";
 import { GitHubClient } from "./github/client";
 import { prisma } from "./db/prisma";
+import { checkRateLimit } from "./rate-limit";
 
 export const prReviewQueue = new Map<string, { timeout: NodeJS.Timeout; commentId?: number }>();
 
@@ -21,6 +22,20 @@ export async function queuePRReview(
   if (existingJob) {
     clearTimeout(existingJob.timeout);
     prReviewQueue.delete(prKey);
+  }
+
+  // Pre-check rate limit before even queueing
+  const rateLimitResult = await checkRateLimit(userId);
+  if (!rateLimitResult.allowed) {
+    const mins = rateLimitResult.waitTimeMinutes;
+    const msg = `🐱 **CodeCat:** Review blocked. Rate limit reached. Try again in ${mins} min${mins === 1 ? '' : 's'}.`;
+    
+    if (commentId) {
+      await client.updateIssueComment(owner, repo, commentId, msg);
+    } else {
+      await client.createIssueComment(owner, repo, number, msg);
+    }
+    return; // Don't queue
   }
 
   // Update or create comment
@@ -49,7 +64,12 @@ export async function queuePRReview(
         await client.updateIssueComment(owner, repo, commentId, "🐱 **CodeCat:** Starting the deep review now...");
       }
       
-      await internalStartReview(owner, repo, number, userId, accessToken);
+      const res = await internalStartReview(owner, repo, number, userId, accessToken);
+      if (res && res.error) {
+        if (commentId) {
+          await client.updateIssueComment(owner, repo, commentId, `🐱 **CodeCat:** ${res.error}`);
+        }
+      }
     } catch (err) {
       console.error("Failed to execute queued review", err);
       if (commentId) {

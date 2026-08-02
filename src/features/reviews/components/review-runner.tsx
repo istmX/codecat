@@ -3,6 +3,7 @@
 import { useState, useTransition, useEffect, useRef } from "react";
 import { startReview } from "../actions/review-actions";
 import { toast } from "sonner";
+import { AlertCircle } from "lucide-react";
 
 interface Props {
   owner: string;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function ReviewRunner({ owner, repo, number }: Props) {
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const autoStarted = useRef(false);
 
@@ -19,22 +21,26 @@ export function ReviewRunner({ owner, repo, number }: Props) {
     
     startTransition(async () => {
       try {
-        await startReview(owner, repo, number);
+        const res = await startReview(owner, repo, number);
+        
+        if (res && res.error) {
+          setErrorMsg(res.error);
+          toast.error("Review Blocked", {
+            description: res.error,
+            id: toastId,
+          });
+          return;
+        }
+
         // Dismiss the loading toast since we hand off to the polling screen
         toast.dismiss(toastId);
       } catch (error: any) {
         const msg = error.message || "An error occurred";
-        if (msg.toLowerCase().includes("limit reached") || msg.toLowerCase().includes("rate limit")) {
-          toast.error("Rate Limit Exceeded", {
-            description: msg,
-            id: toastId,
-          });
-        } else {
-          toast.error("Review Failed", {
-            description: msg,
-            id: toastId,
-          });
-        }
+        setErrorMsg(msg);
+        toast.error("Review Failed", {
+          description: msg,
+          id: toastId,
+        });
         console.error(error);
       }
     });
@@ -47,7 +53,20 @@ export function ReviewRunner({ owner, repo, number }: Props) {
     }
   }, []);
 
-  // Return nothing, let it run in the background while the parent page shows nothing (or relies on Polling)
-  // But wait, if this returns null, the PRReviewPage will show an empty page until status changes.
+  if (errorMsg) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 mt-8 border border-border/50 rounded-2xl bg-card text-center space-y-4 shadow-sm">
+        <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center">
+          <AlertCircle className="w-7 h-7 text-red-500" />
+        </div>
+        <div>
+          <h3 className="text-xl font-bold text-foreground mb-1">Review Blocked</h3>
+          <p className="text-muted-foreground max-w-md">{errorMsg}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Return nothing while starting, let it run in the background
   return null;
 }
