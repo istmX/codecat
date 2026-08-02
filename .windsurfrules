@@ -8,6 +8,18 @@ Never ignore these rules.
 
 ---
 
+# Companion Blueprint Files
+
+Before implementing any feature, AI agents MUST also read the following context files in `.istm-context/`:
+
+- **Architecture** (`.istm-context/architecture.md`): System design, database schema (Prisma), data flow, API workflows, AI review engine, and performance rules.
+- **Design System** (`.istm-context/design.md`): Color tokens, typography scale, spacing grid, component registry, motion rules, and layout constraints.
+- **Project Overview** (`.istm-context/project-overview.md`): Product vision, problem statement, target audience, user journeys, screen inventory, and MVP scope.
+
+These 3 files plus this rulebook form the 4 Pillars of Truth for the project. All architectural, design, and product decisions live there.
+
+---
+
 # Project Overview
 
 CodeCat is an AI powered code review platform that coordinates multiple specialist AI reviewers to analyze pull requests. It integrates with GitHub to fetch diffs and post structured review comments back to PRs. Each reviewer focuses on a specific quality dimension (architecture, security, performance, accessibility, etc.) producing deeper, more actionable feedback than a single general purpose AI reviewer.
