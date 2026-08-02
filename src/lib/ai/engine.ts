@@ -67,7 +67,7 @@ export async function runReviewEngine(reviewId: string, diff: string) {
     }
 
     // Save findings to DB
-    await prisma.$transaction(async (tx) => {
+    const updatedReview = await prisma.$transaction(async (tx) => {
       // Clean up old findings if any
       await tx.finding.deleteMany({ where: { reviewId } });
       
@@ -80,15 +80,61 @@ export async function runReviewEngine(reviewId: string, diff: string) {
         });
       }
 
-      await tx.review.update({
+      return tx.review.update({
         where: { id: reviewId },
         data: {
           status: "COMPLETED",
           overallScore,
           summary: summaryText,
         },
+        include: {
+          repository: true,
+          user: {
+            include: {
+              accounts: {
+                where: { provider: "github" }
+              }
+            }
+          }
+        }
       });
     });
+
+    // Post to GitHub PR
+    try {
+      const account = updatedReview.user.accounts[0];
+      if (account?.access_token) {
+        const { GitHubClient } = await import("@/lib/github/client");
+        const client = new GitHubClient(account.access_token);
+        
+        const overallScoreFmt = overallScore != null ? overallScore.toFixed(1) : '-';
+        let body = `### 🐱 CodeCat Review Results\n**Overall Quality:** ${overallScoreFmt} / 10\n\n${summaryText}\n\n`;
+
+        if (allFindings.length > 0) {
+          body += `#### Top Findings:\n`;
+          allFindings.slice(0, 5).forEach(f => {
+            const emoji = f.severity === "CRITICAL" ? "🚨" : f.severity === "WARNING" ? "⚠️" : "💡";
+            body += `- ${emoji} **[${f.category}]** ${f.title}\n`;
+          });
+          if (allFindings.length > 5) {
+            body += `\n*...and ${allFindings.length - 5} more findings. View full details on the CodeCat dashboard.*`;
+          }
+        } else {
+          body += `🎉 CodeCat found no significant issues!`;
+        }
+
+        body += `\n\n[View Full Report on CodeCat](https://codecat.vercel.app/repositories/${updatedReview.repository.owner}/${updatedReview.repository.name}/pulls/${updatedReview.pullNumber})`;
+
+        await client.createIssueComment(
+          updatedReview.repository.owner,
+          updatedReview.repository.name,
+          updatedReview.pullNumber,
+          body
+        );
+      }
+    } catch (ghError) {
+      console.error("Failed to post comment to GitHub", ghError);
+    }
     
   } catch (error) {
     console.error("Review Engine failed:", error);

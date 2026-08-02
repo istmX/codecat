@@ -61,14 +61,18 @@ export async function startReview(owner: string, repo: string, number: number) {
     throw new Error("Unauthorized");
   }
 
+  return internalStartReview(owner, repo, number, session.userId, session.accessToken);
+}
+
+export async function internalStartReview(owner: string, repo: string, number: number, userId: string, accessToken: string) {
   const { checkRateLimit } = await import("@/lib/rate-limit");
-  const rateLimitResult = await checkRateLimit(session.userId);
+  const rateLimitResult = await checkRateLimit(userId);
   if (!rateLimitResult.allowed) {
     throw new Error(`Review limit reached. Try again in ${rateLimitResult.waitTimeMinutes} mins.`);
   }
 
   const dbRepo = await prisma.repository.findFirst({
-    where: { owner, name: repo, userId: session.userId },
+    where: { owner, name: repo, userId: userId },
   });
 
   if (!dbRepo) {
@@ -76,7 +80,7 @@ export async function startReview(owner: string, repo: string, number: number) {
   }
 
   // Fetch the PR again to get the missing fields for creation
-  const githubClient = new GitHubClient(session.accessToken);
+  const githubClient = new GitHubClient(accessToken);
   const pr = await githubClient.getPullRequest(owner, repo, number);
   const files = await githubClient.getPullRequestFiles(owner, repo, number);
 
@@ -104,7 +108,7 @@ export async function startReview(owner: string, repo: string, number: number) {
     },
     create: {
       repositoryId: dbRepo.id,
-      userId: session.userId,
+      userId: userId,
       pullNumber: number,
       pullTitle: pr.title,
       pullUrl: pr.html_url,

@@ -96,4 +96,18 @@ export class GitHubClient {
   async getPullRequestFiles(owner: string, repo: string, number: number): Promise<{ filename: string; patch?: string; status: string }[]> {
     return this.fetchApi<{ filename: string; patch?: string; status: string }[]>(`/repos/${owner}/${repo}/pulls/${number}/files`);
   }
+
+  async createIssueComment(owner: string, repo: string, issueNumber: number, body: string): Promise<{ id: number; html_url: string }> {
+    return this.fetchApi<{ id: number; html_url: string }>(`/repos/${owner}/${repo}/issues/${issueNumber}/comments`, {
+      method: "POST",
+      body: JSON.stringify({ body }),
+    });
+  }
+
+  async updateIssueComment(owner: string, repo: string, commentId: number, body: string): Promise<{ id: number; html_url: string }> {
+    return this.fetchApi<{ id: number; html_url: string }>(`/repos/${owner}/${repo}/issues/comments/${commentId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ body }),
+    });
+  }
 }
