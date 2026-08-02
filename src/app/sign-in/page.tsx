@@ -11,26 +11,45 @@ export const metadata: Metadata = {
 
 export default function SignInPage() {
   return (
-    <div className="flex h-full w-full items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0, 0, 0.2, 1] as const }}
-        className="w-full max-w-sm rounded-lg border border-border bg-card p-12 shadow-sm"
-      >
-        <div className="flex flex-col items-center text-center">
-          <CodeCatLogo className="text-primary" size={48} />
-          
-          <h1 className="mt-2 text-2xl font-semibold text-foreground tracking-tight">
-            {APP_NAME}
-          </h1>
-          
-          <p className="mt-1 text-sm text-muted-foreground">
-            {APP_TAGLINE}
-          </p>
+    <div className="relative flex min-h-screen w-full items-center justify-center bg-background overflow-hidden selection:bg-primary/30 selection:text-primary-foreground">
+      {/* High-tech structural background */}
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#30363d_1px,transparent_1px),linear-gradient(to_bottom,#30363d_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20"></div>
 
-          <div className="mt-6 w-full">
-            <SignInButton fullWidth />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
+        className="relative w-full max-w-sm"
+      >
+        {/* Glowing backdrop */}
+        <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-br from-primary to-amber-700 opacity-20 blur-xl transition duration-500"></div>
+        
+        <div className="relative rounded-lg border border-border bg-card/60 backdrop-blur-xl p-10 shadow-2xl">
+          <div className="flex flex-col items-center text-center">
+            
+            <motion.div
+              initial={{ rotate: -10 }}
+              animate={{ rotate: 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.1 }}
+            >
+              <CodeCatLogo className="text-primary drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]" size={56} />
+            </motion.div>
+            
+            <h1 className="mt-6 text-3xl font-black text-foreground tracking-tight uppercase">
+              {APP_NAME}
+            </h1>
+            
+            <p className="mt-2 text-sm font-medium text-muted-foreground font-mono">
+              {APP_TAGLINE}
+            </p>
+
+            <div className="mt-8 w-full border-t border-border/50 pt-8">
+              <SignInButton fullWidth />
+            </div>
+
+            <p className="mt-6 text-xs text-muted-foreground">
+              By signing in, you agree to our Terms of Service and Privacy Policy.
+            </p>
           </div>
         </div>
       </motion.div>

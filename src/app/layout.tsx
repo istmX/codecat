@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: APP_NAME,
     description: APP_DESCRIPTION,
+    
     type: "website",
   },
 };

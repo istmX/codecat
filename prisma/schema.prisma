@@ -1,0 +1,127 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  repositories  Repository[]
+  reviews       Review[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Repository {
+  id          String   @id @default(cuid())
+  githubId    Int      @unique
+  name        String
+  fullName    String
+  owner       String
+  description String?
+  language    String?
+  isPrivate   Boolean  @default(false)
+  url         String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviews     Review[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Review {
+  id             String         @id @default(cuid())
+  pullNumber     Int
+  pullTitle      String
+  pullUrl        String
+  branch         String
+  baseBranch     String
+  overallScore   Float?
+  summary        String?
+  status         ReviewStatus   @default(PENDING)
+  providerUsed   String?
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  repositoryId   String
+  repository     Repository     @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  findings       Finding[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model Finding {
+  id             String          @id @default(cuid())
+  category       ReviewCategory
+  severity       Severity
+  title          String
+  description    String
+  filePath       String?
+  lineStart      Int?
+  lineEnd        Int?
+  suggestion     String?
+  codeSnippet    String?
+  reviewId       String
+  review         Review          @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  createdAt      DateTime        @default(now())
+}
+
+enum ReviewStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum ReviewCategory {
+  ARCHITECTURE
+  CODE_QUALITY
+  PERFORMANCE
+  SECURITY
+  ACCESSIBILITY
+  MAINTAINABILITY
+  BEST_PRACTICES
+  TESTING
+  DOCUMENTATION
+}
+
+enum Severity {
+  CRITICAL
+  WARNING
+  SUGGESTION
+  INFO
+}

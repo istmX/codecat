@@ -57,13 +57,15 @@ export function UserMenu({ user }: UserMenuProps) {
               </p>
             </div>
             <div className="p-1">
-              <button
-                onClick={() => signOut()}
-                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-destructive transition-colors text-left"
-              >
-                <LogOut size={16} />
-                Sign out
-              </button>
+              <form action={signOut} className="w-full">
+                <button
+                  type="submit"
+                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-destructive transition-colors text-left"
+                >
+                  <LogOut size={16} />
+                  Sign out
+                </button>
+              </form>
             </div>
           </motion.div>
         </>
