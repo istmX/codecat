@@ -15,49 +15,24 @@ export function HowItWorks() {
         </p>
       </div>
 
-      <div className="mt-20 grid grid-cols-1 items-start gap-16 lg:grid-cols-2">
-        {/* Left Column (Sticky Steps) */}
-        <div className="sticky top-32 flex flex-col gap-12 lg:gap-24">
-          <div className="flex flex-col gap-4">
+      <div className="mt-20 flex flex-col gap-24">
+        {/* Step 1 */}
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+          <div className="flex flex-col gap-4 order-2 lg:order-1">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-card shadow-sm">
               <GitPullRequest className="size-6 text-primary" />
             </div>
-            <h3 className="font-[family-name:var(--font-inter)] text-2xl font-bold text-foreground">1. Open a Pull Request</h3>
-            <p className="font-[family-name:var(--font-inter)] text-base text-muted-foreground leading-relaxed">
+            <h3 className="font-[family-name:var(--font-inter)] text-3xl font-bold text-foreground">1. Open a Pull Request</h3>
+            <p className="font-[family-name:var(--font-inter)] text-lg text-muted-foreground leading-relaxed">
               CodeCat automatically detects new PRs and code pushes. There are no webhooks to configure or CI/CD pipelines to modify. Just install the GitHub app and write code.
             </p>
           </div>
-
-          <div className="flex flex-col gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-card shadow-sm">
-              <Zap className="size-6 text-primary" />
-            </div>
-            <h3 className="font-[family-name:var(--font-inter)] text-2xl font-bold text-foreground">2. AI Agents Analyze</h3>
-            <p className="font-[family-name:var(--font-inter)] text-base text-muted-foreground leading-relaxed">
-              CodeCat orchestrates a matrix of specialist AI models. The Security agent checks for vulnerabilities, while the Performance agent looks for bottlenecks. They run in parallel, finishing in seconds.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-card shadow-sm">
-              <CheckCircle2 className="size-6 text-primary" />
-            </div>
-            <h3 className="font-[family-name:var(--font-inter)] text-2xl font-bold text-foreground">3. Actionable Feedback</h3>
-            <p className="font-[family-name:var(--font-inter)] text-base text-muted-foreground leading-relaxed">
-              Feedback is posted directly to your GitHub PR as structured, native comments. CodeCat explains the "why" and provides the exact code to fix it.
-            </p>
-          </div>
-        </div>
-
-        {/* Right Column (Visuals) */}
-        <div className="flex flex-col gap-12 lg:gap-24">
-          {/* Visual 1 */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="flex aspect-square w-full items-center justify-center rounded-xl border border-border bg-card p-8 shadow-2xl overflow-hidden relative"
+            className="flex aspect-square w-full items-center justify-center rounded-xl border border-border bg-card p-8 shadow-2xl overflow-hidden relative order-1 lg:order-2"
           >
             <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:16px_16px]"></div>
             <div className="w-full rounded-lg border border-border bg-background shadow-lg overflow-hidden flex flex-col relative z-10">
@@ -76,14 +51,16 @@ export function HowItWorks() {
               </div>
             </div>
           </motion.div>
+        </div>
 
-          {/* Visual 2 */}
+        {/* Step 2 */}
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="flex aspect-square w-full items-center justify-center rounded-xl border border-border bg-card p-8 shadow-2xl relative overflow-hidden"
+            className="flex aspect-square w-full items-center justify-center rounded-xl border border-border bg-card p-8 shadow-2xl relative overflow-hidden order-1 lg:order-1"
           >
              <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:16px_16px]"></div>
              <div className="flex flex-col gap-3 w-full relative z-10">
@@ -113,14 +90,34 @@ export function HowItWorks() {
                 </div>
              </div>
           </motion.div>
+          <div className="flex flex-col gap-4 order-2 lg:order-2">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-card shadow-sm">
+              <Zap className="size-6 text-primary" />
+            </div>
+            <h3 className="font-[family-name:var(--font-inter)] text-3xl font-bold text-foreground">2. AI Agents Analyze</h3>
+            <p className="font-[family-name:var(--font-inter)] text-lg text-muted-foreground leading-relaxed">
+              CodeCat orchestrates a matrix of specialist AI models. The Security agent checks for vulnerabilities, while the Performance agent looks for bottlenecks. They run in parallel, finishing in seconds.
+            </p>
+          </div>
+        </div>
 
-          {/* Visual 3 */}
+        {/* Step 3 */}
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+          <div className="flex flex-col gap-4 order-2 lg:order-1">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-card shadow-sm">
+              <CheckCircle2 className="size-6 text-primary" />
+            </div>
+            <h3 className="font-[family-name:var(--font-inter)] text-3xl font-bold text-foreground">3. Actionable Feedback</h3>
+            <p className="font-[family-name:var(--font-inter)] text-lg text-muted-foreground leading-relaxed">
+              Feedback is posted directly to your GitHub PR as structured, native comments. CodeCat explains the "why" and provides the exact code to fix it.
+            </p>
+          </div>
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="flex aspect-square w-full items-center justify-center rounded-xl border border-border bg-card p-8 shadow-2xl relative overflow-hidden"
+            className="flex aspect-square w-full items-center justify-center rounded-xl border border-border bg-card p-8 shadow-2xl relative overflow-hidden order-1 lg:order-2"
           >
              <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:16px_16px]"></div>
              <div className="w-full rounded-md border border-border bg-background p-5 shadow-lg relative z-10">

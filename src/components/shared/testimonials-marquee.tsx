@@ -113,7 +113,13 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 
 export function TestimonialsMarquee() {
   return (
-    <div className="mt-10 flex w-full max-w-2xl flex-col items-center px-4">
+    <motion.div 
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ type: "spring", stiffness: 300, damping: 20, mass: 0.8 }}
+      className="mt-10 flex w-full max-w-2xl flex-col items-center px-4"
+    >
       <h2 className="font-[family-name:var(--font-inter)] text-xl font-semibold text-foreground text-center">
         CodeCat Does It Better
       </h2>
@@ -153,6 +159,6 @@ export function TestimonialsMarquee() {
           </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

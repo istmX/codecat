@@ -1,6 +1,17 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 export function IntegrationCloud() {
   return (
-    <div className="mt-16 w-full max-w-4xl opacity-70 transition-opacity hover:opacity-100">
+    <motion.div 
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 0.7, y: 0 }}
+      whileHover={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ type: "spring", stiffness: 300, damping: 20, mass: 0.8 }}
+      className="mt-16 w-full max-w-4xl transition-opacity mx-auto"
+    >
       <p className="text-center font-[family-name:var(--font-jetbrains-mono)] text-sm text-muted-foreground uppercase tracking-widest">
         Works seamlessly with
       </p>
@@ -31,6 +42,6 @@ export function IntegrationCloud() {
           <span className="ml-1 rounded bg-muted px-1.5 py-0.5 font-[family-name:var(--font-jetbrains-mono)] text-[10px] text-muted-foreground">Soon</span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
