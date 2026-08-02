@@ -12,7 +12,7 @@ export function SetupClient() {
   const router = useRouter();
 
   // You would replace this with your actual GitHub App Installation URL
-  const GITHUB_APP_URL = "https://github.com/apps/codecat-reviewer/installations/new";
+  const GITHUB_APP_URL = "https://github.com/apps/codecat-ai-reviewer/installations/new";
 
   const handleCheck = async () => {
     setIsLoading(true);
