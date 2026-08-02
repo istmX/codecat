@@ -6,6 +6,7 @@ import { CodeCatLogo } from "@/components/shared/codecat-logo";
 import { cn } from "@/lib/utils/cn";
 import Link from "next/link";
 import { signOut } from "@/features/auth/actions/sign-out";
+import { Star, Cat, LayoutDashboard, GitBranch, User, LogOut, BookOpen, Keyboard, MessageSquare, Palette, Quote, EyeOff, Github, Info } from "lucide-react";
 
 const MASCOT_QUOTES = [
   "I smell a code smell...",
@@ -164,7 +165,7 @@ export function InteractiveMascot({ className }: { className?: string }) {
       setClickCount(newCount);
       
       if (newCount === 10) {
-        setQuote("Achievement Unlocked! 🐟 Fish Earned!");
+        setQuote("Achievement Unlocked! You earned the Fish Badge!");
         setShowQuote(true);
         setTimeout(() => setShowQuote(false), 3000);
         setClickCount(0); 
@@ -322,21 +323,21 @@ export function InteractiveMascot({ className }: { className?: string }) {
                 {/* Section: Navigation */}
                 <div className="w-full">
                   <h3 className="mb-2 text-sm font-bold text-muted-foreground tracking-wider uppercase flex items-center gap-2">
-                    <span>🐈</span> Mew... Where to? ...Meow
+                    <Cat className="h-3.5 w-3.5" /> Mew... Where to? ...Meow
                   </h3>
                   <div className="flex flex-col gap-1 rounded-lg border border-border bg-secondary/20 p-2">
-                    <Link onClick={() => setIsMenuOpen(false)} href="/dashboard" className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
-                      Dashboard
+                    <Link onClick={() => setIsMenuOpen(false)} href="/dashboard" className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
+                      <LayoutDashboard className="h-4 w-4 text-muted-foreground" /> Dashboard
                     </Link>
-                    <Link onClick={() => setIsMenuOpen(false)} href="/repositories" className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
-                      Repositories
+                    <Link onClick={() => setIsMenuOpen(false)} href="/repositories" className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
+                      <GitBranch className="h-4 w-4 text-muted-foreground" /> Repositories
                     </Link>
-                    <Link onClick={() => setIsMenuOpen(false)} href="/profile" className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
-                      Profile & Billing
+                    <Link onClick={() => setIsMenuOpen(false)} href="/profile" className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
+                      <User className="h-4 w-4 text-muted-foreground" /> Profile & Billing
                     </Link>
                     <form action={signOut} className="w-full">
-                      <button type="submit" className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-red-500 hover:bg-red-500/10 transition-colors text-left">
-                        Sign Out
+                      <button type="submit" className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-500 hover:bg-red-500/10 transition-colors text-left">
+                        <LogOut className="h-4 w-4" /> Sign Out
                       </button>
                     </form>
                   </div>
@@ -345,7 +346,7 @@ export function InteractiveMascot({ className }: { className?: string }) {
                 {/* Section: What's New */}
                 <div className="w-full">
                   <h3 className="mb-2 text-sm font-bold text-muted-foreground tracking-wider uppercase flex items-center gap-2">
-                    <span>🐈</span> Mew... What&apos;s New? ...Meow
+                    <Cat className="h-3.5 w-3.5" /> Mew... What&apos;s New? ...Meow
                   </h3>
                   <div className="flex flex-col gap-1 rounded-lg border border-border bg-secondary/20 p-2">
                     <button className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
@@ -363,17 +364,17 @@ export function InteractiveMascot({ className }: { className?: string }) {
                 {/* Section: Need Help */}
                 <div className="w-full">
                   <h3 className="mb-2 text-sm font-bold text-muted-foreground tracking-wider uppercase flex items-center gap-2">
-                    <span>🐈</span> Mew... Need Help? ...Meow
+                    <Cat className="h-3.5 w-3.5" /> Mew... Need Help? ...Meow
                   </h3>
                   <div className="flex flex-col gap-1 rounded-lg border border-border bg-secondary/20 p-2">
-                    <button className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
-                      Documentation
+                     <button className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
+                      <BookOpen className="h-4 w-4 text-muted-foreground" /> Documentation
                     </button>
-                    <button className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
-                      Keyboard Shortcuts
+                    <button className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
+                      <Keyboard className="h-4 w-4 text-muted-foreground" /> Keyboard Shortcuts
                     </button>
-                    <button className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
-                      Contact Support
+                    <button className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
+                      <MessageSquare className="h-4 w-4 text-muted-foreground" /> Contact Support
                     </button>
                   </div>
                 </div>
@@ -381,17 +382,17 @@ export function InteractiveMascot({ className }: { className?: string }) {
                 {/* Section: Cat Settings */}
                 <div className="w-full">
                   <h3 className="mb-2 text-sm font-bold text-muted-foreground tracking-wider uppercase flex items-center gap-2">
-                    <span>🐈</span> Mew... Cat Settings... Meow
+                    <Cat className="h-3.5 w-3.5" /> Mew... Cat Settings... Meow
                   </h3>
                   <div className="flex flex-col gap-1 rounded-lg border border-border bg-secondary/20 p-2">
-                    <button className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
-                      Change Mood
+                    <button className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
+                      <Palette className="h-4 w-4 text-muted-foreground" /> Change Mood
                     </button>
-                    <button className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
-                      Enable Random Quotes
+                    <button className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
+                      <Quote className="h-4 w-4 text-muted-foreground" /> Enable Random Quotes
                     </button>
-                    <button className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
-                      Disable Cat
+                    <button className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
+                      <EyeOff className="h-4 w-4 text-muted-foreground" /> Disable Cat
                     </button>
                   </div>
                 </div>
@@ -399,13 +400,13 @@ export function InteractiveMascot({ className }: { className?: string }) {
                 {/* Section: About */}
                 <div className="w-full">
                   <h3 className="mb-2 text-sm font-bold text-muted-foreground tracking-wider uppercase flex items-center gap-2">
-                    <span>🐈</span> Mew... About CodeCat... Meow
+                    <Cat className="h-3.5 w-3.5" /> Mew... About CodeCat... Meow
                   </h3>
                   <div className="flex flex-col gap-1 rounded-lg border border-border bg-secondary/20 p-4 text-xs text-muted-foreground">
                     <p className="font-medium text-foreground mb-1">Version 0.1.0</p>
                     <p>Built with ISTMX Skills</p>
-                    <p className="mt-2 text-primary hover:underline cursor-pointer">GitHub</p>
-                    <p className="text-primary hover:underline cursor-pointer">Discord</p>
+                    <p className="mt-2 text-primary hover:underline cursor-pointer flex items-center gap-1"><Github className="h-3 w-3" /> GitHub</p>
+                    <p className="text-primary hover:underline cursor-pointer flex items-center gap-1"><Info className="h-3 w-3" /> Discord</p>
                   </div>
                 </div>
 

@@ -1,7 +1,9 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
+import { InteractiveMascot } from "@/components/shared/interactive-mascot";
 import { SetupClient } from "./setup-client";
+import { Link2 } from "lucide-react";
 
 export default async function SetupPage() {
   const session = await auth();
@@ -22,7 +24,7 @@ export default async function SetupPage() {
     <div className="flex h-[calc(100vh-64px)] w-full flex-col items-center justify-center bg-background p-6">
       <div className="flex w-full max-w-md flex-col items-center text-center space-y-6">
         <div className="flex h-24 w-24 items-center justify-center rounded-full bg-secondary/50 border border-border shadow-lg">
-          <span className="text-4xl">🔌</span>
+          <Link2 className="h-10 w-10 text-primary" />
         </div>
         
         <div className="space-y-2">
