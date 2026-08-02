@@ -4,6 +4,7 @@ import GitHub from "next-auth/providers/github";
 // Edge-compatible auth config — no Prisma imports here.
 // Used by middleware and composed into the full auth.ts config.
 export const authConfig = {
+  trustHost: true,
   providers: [
     GitHub({
       authorization: {
