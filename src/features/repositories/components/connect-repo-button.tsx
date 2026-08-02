@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, Check, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { connectRepository, disconnectRepository } from "@/features/repositories/actions/repository-actions";
 
@@ -12,42 +13,42 @@ interface Props {
 }
 
 export function ConnectRepoButton({ githubId, initialConnected = false }: Props) {
-  const [isConnected, setIsConnected] = useState(initialConnected);
-  const [isConnecting, setIsConnecting] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const queryClient = useQueryClient();
+
+  const connectMutation = useMutation({
+    mutationFn: () => connectRepository(githubId),
+    onSuccess: () => {
+      setIsConnected(true);
+      queryClient.invalidateQueries({ queryKey: ["repositories"] });
+      setShowToast(true);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("codecat-happy"));
+      }
+      setTimeout(() => setShowToast(false), 3000);
+    }
+  });
+
+  const disconnectMutation = useMutation({
+    mutationFn: () => disconnectRepository(githubId),
+    onSuccess: () => {
+      setIsConnected(false);
+      queryClient.invalidateQueries({ queryKey: ["repositories"] });
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("codecat-sad"));
+      }
+    }
+  });
+
+  const [isConnected, setIsConnected] = useState(initialConnected);
+  const isConnecting = connectMutation.isPending || disconnectMutation.isPending;
 
   const handleConnect = async () => {
     if (isConnecting) return;
-    
-    setIsConnecting(true);
-    
-    try {
-      if (isConnected) {
-        await disconnectRepository(githubId);
-        setIsConnected(false);
-        // Trigger Mascot sad animation
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new Event("codecat-sad"));
-        }
-      } else {
-        await connectRepository(githubId);
-        setIsConnected(true);
-        setShowToast(true);
-        
-        // Trigger Mascot happy animation
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new Event("codecat-happy"));
-        }
-        
-        // Hide toast after 3 seconds
-        setTimeout(() => {
-          setShowToast(false);
-        }, 3000);
-      }
-    } catch (error) {
-      console.error("Failed to toggle repository connection:", error);
-    } finally {
-      setIsConnecting(false);
+    if (isConnected) {
+      disconnectMutation.mutate();
+    } else {
+      connectMutation.mutate();
     }
   };
 
