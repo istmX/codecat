@@ -65,7 +65,7 @@ export class GitHubClient {
   }
 
   async getUserRepositories(): Promise<GithubRepository[]> {
-    // Note: for production we should paginate, but per page 100 is fine for MVP
+
     return this.fetchApi<GithubRepository[]>("/user/repos?sort=updated&per_page=100");
   }
 
