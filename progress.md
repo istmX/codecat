@@ -29,6 +29,9 @@
 - Resolved "Invalid Server Actions request" CSRF error in GitHub Codespaces by configuring `allowedOrigins` in `next.config.ts`.
 - Extracted Repositories filter UI to a Client Component (`RepositoryListClient`), fixing Next.js 14+ Server/Client Component boundary typing issues.
 - Implemented Pull Request Dashboard (Spec 0002): Fetching live PRs from GitHub API and cross-referencing with local CodeCat DB review status.
+- Used `/istm-craft` to architect and write feature spec for `.istm-context/specs/0001-repository-caching.md`.
+- Used `/develop` to successfully implement the spec, persisting repository state using TanStack Query.
+- Verified dogfood-testing of the open-source `@istmx/skills` Agentic Orchestration Framework (v1.1.0) and confirmed it successfully constrains the LLM to write structured, modular code.
 
 ### Pending
 

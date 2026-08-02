@@ -5,13 +5,21 @@ import { RepositoryWithStatus } from "../types";
 import { RepositoryListItem } from "./repository-list-item";
 import { Search, FolderGit2 } from "lucide-react";
 import { signIn } from "next-auth/react";
+import { useRepositories } from "../lib/hooks";
 
 interface Props {
   repositories: RepositoryWithStatus[];
   hasRepoAccess: boolean;
 }
 
-export function RepositoryListClient({ repositories, hasRepoAccess }: Props) {
+export function RepositoryListClient({ repositories: initialRepositories, hasRepoAccess: initialHasRepoAccess }: Props) {
+  const { data } = useRepositories({
+    repositories: initialRepositories,
+    hasRepoAccess: initialHasRepoAccess,
+  });
+
+  const repositories = data?.repositories ?? [];
+  const hasRepoAccess = data?.hasRepoAccess ?? false;
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [sortFilter, setSortFilter] = useState("updated");
