@@ -10,7 +10,7 @@ export default async function DashboardPage() {
   const session = await auth();
   
   if (!session?.userId) {
-    return null; // Handled by layout redirect
+    return null; 
   }
 
   const repoCount = await prisma.repository.count({
