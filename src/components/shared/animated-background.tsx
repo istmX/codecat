@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export function SignInBackground() {
+export function AnimatedBackground() {
   return (
     <>
       {/* High-tech structural grid background */}

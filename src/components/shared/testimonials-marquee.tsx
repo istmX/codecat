@@ -111,7 +111,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   );
 }
 
-export function SignInTestimonials() {
+export function TestimonialsMarquee() {
   return (
     <div className="mt-10 flex w-full max-w-2xl flex-col items-center px-4">
       <h2 className="font-[family-name:var(--font-inter)] text-xl font-semibold text-foreground text-center">

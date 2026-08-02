@@ -3,11 +3,11 @@ import { CodeCatLogo } from "@/components/shared/codecat-logo";
 import { SignInButton } from "@/features/auth/components/sign-in-button";
 import { APP_NAME, APP_TAGLINE } from "@/lib/utils/constants";
 import * as motion from "framer-motion/client";
-import { SignInBackground } from "./sign-in-background";
+import { AnimatedBackground } from "@/components/shared/animated-background";
 import { SignInFeatureList } from "./sign-in-feature-list";
 import { ReviewerBadgesMarquee } from "./reviewer-badges-marquee";
 import { SignInStatsBar } from "./sign-in-stats-bar";
-import { SignInTestimonials } from "./sign-in-testimonials";
+import { TestimonialsMarquee } from "@/components/shared/testimonials-marquee";
 
 export const metadata: Metadata = {
   title: "Sign In",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export default function SignInPage() {
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background overflow-hidden selection:bg-primary/30 selection:text-primary-foreground pb-20 pt-10">
-      <SignInBackground />
+      <AnimatedBackground />
 
       <div className="relative z-10 flex w-full flex-col items-center px-4">
         <motion.div
@@ -60,7 +60,7 @@ export default function SignInPage() {
 
         <ReviewerBadgesMarquee />
         <SignInStatsBar />
-        <SignInTestimonials />
+        <TestimonialsMarquee />
       </div>
     </div>
   );
