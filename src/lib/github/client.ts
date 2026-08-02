@@ -27,6 +27,7 @@ export interface GithubPullRequest {
   html_url: string;
   created_at: string;
   updated_at: string;
+  merged_at: string | null;
   head: {
     ref: string;
   };
@@ -70,7 +71,7 @@ export class GitHubClient {
     return this.fetchApi<GithubRepository>(`/repos/${owner}/${repo}`);
   }
 
-  async getRepositoryPullRequests(owner: string, repo: string, limit: number = 30): Promise<GithubPullRequest[]> {
-    return this.fetchApi<GithubPullRequest[]>(`/repos/${owner}/${repo}/pulls?state=open&per_page=${limit}&sort=created&direction=desc`);
+  async getRepositoryPullRequests(owner: string, repo: string, limit: number = 30, state: "open" | "closed" | "all" = "all"): Promise<GithubPullRequest[]> {
+    return this.fetchApi<GithubPullRequest[]>(`/repos/${owner}/${repo}/pulls?state=${state}&per_page=${limit}&sort=created&direction=desc`);
   }
 }

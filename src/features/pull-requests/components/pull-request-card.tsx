@@ -24,16 +24,22 @@ export function PullRequestCard({ pr, owner, repo }: { pr: PullRequestWithStatus
   return (
     <Link 
       href={`/repositories/${owner}/${repo}/pulls/${pr.number}`}
-      className="block p-4 border border-border rounded-lg bg-card transition-all hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background group"
+      className={cn(
+        "block p-4 border border-border rounded-lg bg-card transition-all hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background group",
+        pr.prState === "merged" && "opacity-80 hover:opacity-100 bg-muted/20"
+      )}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-3 min-w-0">
-          <div className="mt-1 flex-shrink-0 text-muted-foreground group-hover:text-foreground transition-colors">
-            <GitPullRequest size={18} />
+          <div className={cn(
+            "mt-1 flex-shrink-0 transition-colors",
+            pr.prState === "merged" ? "text-purple-500" : "text-muted-foreground group-hover:text-foreground"
+          )}>
+            {pr.prState === "merged" ? <GitMerge size={18} /> : <GitPullRequest size={18} />}
           </div>
           <div className="min-w-0">
-            <h3 className="text-base font-semibold text-foreground truncate max-w-full">
-              {pr.title} <span className="text-muted-foreground font-normal ml-1">#{pr.number}</span>
+            <h3 className={cn("text-base font-semibold truncate max-w-full", pr.prState === "merged" ? "text-muted-foreground" : "text-foreground")}>
+              {pr.title} <span className="text-muted-foreground/70 font-normal ml-1">#{pr.number}</span>
             </h3>
             
             <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground">

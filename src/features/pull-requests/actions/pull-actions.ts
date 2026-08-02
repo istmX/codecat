@@ -63,6 +63,7 @@ export async function getPullRequestsWithStatus(owner: string, repo: string): Pr
       createdAt: pr.created_at,
       status: review ? review.status : "UNREVIEWED",
       overallScore: review ? review.overallScore : null,
+      prState: pr.merged_at ? "merged" : pr.state === "closed" ? "closed" : "open",
     };
   });
 }
