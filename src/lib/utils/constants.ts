@@ -9,6 +9,7 @@ export const ROUTES = {
   SIGN_IN: "/sign-in",
   DASHBOARD: "/dashboard",
   REPOSITORIES: "/repositories",
+  PULL_REQUESTS: "/pull-requests",
   SETTINGS: "/settings",
 } as const;
 
