@@ -78,7 +78,6 @@ export class GitHubClient {
   async getPullRequest(owner: string, repo: string, number: number): Promise<GithubPullRequest> {
     return this.fetchApi<GithubPullRequest>(`/repos/${owner}/${repo}/pulls/${number}`);
   }
-
   async getPullRequestDiff(owner: string, repo: string, number: number): Promise<string> {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/pulls/${number}`, {
       headers: {
