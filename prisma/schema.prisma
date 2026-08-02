@@ -82,6 +82,8 @@ model Review {
   findings       Finding[]
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
+
+  @@unique([repositoryId, pullNumber])
 }
 
 model Finding {

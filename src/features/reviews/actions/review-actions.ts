@@ -62,9 +62,10 @@ export async function startReview(owner: string, repo: string, number: number) {
     throw new Error("Repository not found in db");
   }
 
-  // MVP Mock implementation
-  // We'll simulate a review taking place by upserting a pending review, then returning
-  
+  // Fetch the PR again to get the missing fields for creation
+  const githubClient = new GitHubClient(session.accessToken);
+  const pr = await githubClient.getPullRequest(owner, repo, number);
+
   await prisma.review.upsert({
     where: {
       repositoryId_pullNumber: {
@@ -77,7 +78,12 @@ export async function startReview(owner: string, repo: string, number: number) {
     },
     create: {
       repositoryId: dbRepo.id,
+      userId: session.userId,
       pullNumber: number,
+      pullTitle: pr.title,
+      pullUrl: pr.html_url,
+      branch: pr.head.ref,
+      baseBranch: pr.base.ref,
       status: "RUNNING",
     },
   });
