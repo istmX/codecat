@@ -11,12 +11,16 @@ export async function checkRateLimit(userId: string): Promise<{ allowed: boolean
         gte: oneHourAgo,
       },
     },
+    select: {
+      createdAt: true,
+    },
     orderBy: {
       createdAt: 'asc',
     },
   });
 
-  if (reviewsInLastHour.length >= 5) {
+  // TEMPORARILY set to 1 for testing (normally 5)
+  if (reviewsInLastHour.length >= 1) {
     // The user has hit the limit. Wait time is based on the oldest review in the current window.
     const oldestReview = reviewsInLastHour[0];
     const nextAvailableTime = new Date(oldestReview.createdAt.getTime() + 60 * 60 * 1000);
