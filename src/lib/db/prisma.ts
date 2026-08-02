@@ -3,7 +3,6 @@ import { PrismaNeon } from "@prisma/adapter-neon";
 import { Pool, neonConfig } from "@neondatabase/serverless";
 import ws from "ws";
 
-// Required for Neon serverless in Node.js environments
 neonConfig.webSocketConstructor = ws;
 
 function createPrismaClient() {
@@ -12,7 +11,7 @@ function createPrismaClient() {
   return new PrismaClient({ adapter });
 }
 
-// Singleton pattern to avoid exhausting DB connections in development
+
 const globalForPrisma = globalThis as unknown as {
   prisma: ReturnType<typeof createPrismaClient> | undefined;
 };
