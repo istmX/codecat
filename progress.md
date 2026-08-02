@@ -28,6 +28,7 @@
 - Fixed GitHub OAuth scope request by forcing `prompt: "consent"` to ensure the `repo` scope is properly requested, handling existing tokens correctly.
 - Resolved "Invalid Server Actions request" CSRF error in GitHub Codespaces by configuring `allowedOrigins` in `next.config.ts`.
 - Extracted Repositories filter UI to a Client Component (`RepositoryListClient`), fixing Next.js 14+ Server/Client Component boundary typing issues.
+- Implemented Pull Request Dashboard (Spec 0002): Fetching live PRs from GitHub API and cross-referencing with local CodeCat DB review status.
 
 ### Pending
 
