@@ -74,4 +74,8 @@ export class GitHubClient {
   async getRepositoryPullRequests(owner: string, repo: string, limit: number = 30, state: "open" | "closed" | "all" = "all"): Promise<GithubPullRequest[]> {
     return this.fetchApi<GithubPullRequest[]>(`/repos/${owner}/${repo}/pulls?state=${state}&per_page=${limit}&sort=created&direction=desc`);
   }
+
+  async getPullRequest(owner: string, repo: string, number: number): Promise<GithubPullRequest> {
+    return this.fetchApi<GithubPullRequest>(`/repos/${owner}/${repo}/pulls/${number}`);
+  }
 }
