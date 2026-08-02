@@ -39,15 +39,20 @@ export async function runReviewEngine(reviewId: string, diff: string) {
 
     const allFindings = [...architectureFindings, ...securityFindings, ...performanceFindings];
 
-    // Calculate a naive overall score based on severities
-    let deduction = 0;
+    // Calculate a more forgiving overall score
+    let totalDeduction = 0;
     allFindings.forEach((f) => {
-      if (f.severity === "CRITICAL") deduction += 2.0;
-      else if (f.severity === "WARNING") deduction += 1.0;
-      else if (f.severity === "SUGGESTION") deduction += 0.5;
+      if (f.severity === "CRITICAL") totalDeduction += 1.5;
+      else if (f.severity === "WARNING") totalDeduction += 0.5;
+      else if (f.severity === "SUGGESTION") totalDeduction += 0.2;
     });
     
-    const overallScore = Math.max(0, 10 - deduction);
+    // Scale the deduction based on the number of findings so large PRs don't automatically fail
+    // We cap the maximum effective deduction per issue so a 19-issue PR doesn't immediately drop to 0.0
+    const scalingFactor = Math.max(1, Math.sqrt(allFindings.length));
+    const finalDeduction = totalDeduction / scalingFactor;
+    
+    const overallScore = Math.max(0, 10 - finalDeduction);
 
     // Generate AI Summary
     let summaryText = `Completed review with ${allFindings.length} findings.`;
