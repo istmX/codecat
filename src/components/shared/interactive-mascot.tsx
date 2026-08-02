@@ -6,7 +6,7 @@ import { CodeCatLogo } from "@/components/shared/codecat-logo";
 import { cn } from "@/lib/utils/cn";
 import Link from "next/link";
 import { signOut } from "@/features/auth/actions/sign-out";
-import { Star, Cat, LayoutDashboard, GitBranch, User, LogOut, BookOpen, Keyboard, MessageSquare, Palette, Quote, EyeOff, Github, Info } from "lucide-react";
+import { Star, Cat, LayoutDashboard, GitBranch, User, LogOut, BookOpen, Keyboard, MessageSquare, Palette, Quote, EyeOff, ExternalLink, Info } from "lucide-react";
 
 const MASCOT_QUOTES = [
   "I smell a code smell...",
@@ -323,7 +323,7 @@ export function InteractiveMascot({ className }: { className?: string }) {
                 {/* Section: Navigation */}
                 <div className="w-full">
                   <h3 className="mb-2 text-sm font-bold text-muted-foreground tracking-wider uppercase flex items-center gap-2">
-                    <Cat className="h-3.5 w-3.5" /> Mew... Where to? ...Meow
+                    <span>🐈</span> Mew... Where to? ...Meow
                   </h3>
                   <div className="flex flex-col gap-1 rounded-lg border border-border bg-secondary/20 p-2">
                     <Link onClick={() => setIsMenuOpen(false)} href="/dashboard" className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
@@ -346,7 +346,7 @@ export function InteractiveMascot({ className }: { className?: string }) {
                 {/* Section: What's New */}
                 <div className="w-full">
                   <h3 className="mb-2 text-sm font-bold text-muted-foreground tracking-wider uppercase flex items-center gap-2">
-                    <Cat className="h-3.5 w-3.5" /> Mew... What&apos;s New? ...Meow
+                    <span>🐈</span> Mew... What&apos;s New? ...Meow
                   </h3>
                   <div className="flex flex-col gap-1 rounded-lg border border-border bg-secondary/20 p-2">
                     <button className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
@@ -364,7 +364,7 @@ export function InteractiveMascot({ className }: { className?: string }) {
                 {/* Section: Need Help */}
                 <div className="w-full">
                   <h3 className="mb-2 text-sm font-bold text-muted-foreground tracking-wider uppercase flex items-center gap-2">
-                    <Cat className="h-3.5 w-3.5" /> Mew... Need Help? ...Meow
+                    <span>🐈</span> Mew... Need Help? ...Meow
                   </h3>
                   <div className="flex flex-col gap-1 rounded-lg border border-border bg-secondary/20 p-2">
                      <button className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
@@ -382,7 +382,7 @@ export function InteractiveMascot({ className }: { className?: string }) {
                 {/* Section: Cat Settings */}
                 <div className="w-full">
                   <h3 className="mb-2 text-sm font-bold text-muted-foreground tracking-wider uppercase flex items-center gap-2">
-                    <Cat className="h-3.5 w-3.5" /> Mew... Cat Settings... Meow
+                    <span>🐈</span> Mew... Cat Settings... Meow
                   </h3>
                   <div className="flex flex-col gap-1 rounded-lg border border-border bg-secondary/20 p-2">
                     <button className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
@@ -400,12 +400,12 @@ export function InteractiveMascot({ className }: { className?: string }) {
                 {/* Section: About */}
                 <div className="w-full">
                   <h3 className="mb-2 text-sm font-bold text-muted-foreground tracking-wider uppercase flex items-center gap-2">
-                    <Cat className="h-3.5 w-3.5" /> Mew... About CodeCat... Meow
+                    <span>🐈</span> Mew... About CodeCat... Meow
                   </h3>
                   <div className="flex flex-col gap-1 rounded-lg border border-border bg-secondary/20 p-4 text-xs text-muted-foreground">
                     <p className="font-medium text-foreground mb-1">Version 0.1.0</p>
                     <p>Built with ISTMX Skills</p>
-                    <p className="mt-2 text-primary hover:underline cursor-pointer flex items-center gap-1"><Github className="h-3 w-3" /> GitHub</p>
+                    <p className="mt-2 text-primary hover:underline cursor-pointer flex items-center gap-1"><ExternalLink className="h-3 w-3" /> GitHub</p>
                     <p className="text-primary hover:underline cursor-pointer flex items-center gap-1"><Info className="h-3 w-3" /> Discord</p>
                   </div>
                 </div>
