@@ -70,7 +70,7 @@ export async function internalStartReview(owner: string, repo: string, number: n
   const rateLimitResult = await checkRateLimit(userId);
   if (!rateLimitResult.allowed) {
     const mins = rateLimitResult.waitTimeMinutes;
-    throw new Error(`Review limit reached. Try again in ${mins} min${mins === 1 ? '' : 's'}.`);
+    return { error: `Review limit reached. Try again in ${mins} min${mins === 1 ? '' : 's'}.` };
   }
 
   const dbRepo = await prisma.repository.findFirst({
@@ -78,7 +78,7 @@ export async function internalStartReview(owner: string, repo: string, number: n
   });
 
   if (!dbRepo) {
-    throw new Error("Repository not found in db");
+    return { error: "Repository not found in db" };
   }
 
   // Fetch the PR again to get the missing fields for creation
