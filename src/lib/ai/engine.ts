@@ -45,6 +45,7 @@ export async function runReviewEngine(reviewId: string, diff: string) {
       if (f.severity === "CRITICAL") totalDeduction += 1.5;
       else if (f.severity === "WARNING") totalDeduction += 0.5;
       else if (f.severity === "SUGGESTION") totalDeduction += 0.2;
+      else if (f.severity === "INFO") totalDeduction += 0.05;
     });
     
     // Scale the deduction based on the number of findings so large PRs don't automatically fail
