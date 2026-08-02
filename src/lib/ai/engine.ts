@@ -1,4 +1,4 @@
-import { generateObject } from "ai";
+import { generateObject, generateText } from "ai";
 import { models } from "./providers";
 import { specialistPrompts, findingsListSchema } from "./specialists";
 import { prisma } from "@/lib/db/prisma";
@@ -49,6 +49,23 @@ export async function runReviewEngine(reviewId: string, diff: string) {
     
     const overallScore = Math.max(0, 10 - deduction);
 
+    // Generate AI Summary
+    let summaryText = `Completed review with ${allFindings.length} findings.`;
+    if (allFindings.length > 0) {
+      try {
+        const { text } = await generateText({
+          model: models.groq,
+          system: "You are an AI code reviewer. Provide a very brief 2-sentence summary of the main issues found in the PR. Focus only on the most critical themes.",
+          prompt: `Here are the findings:\n${allFindings.map(f => `- [${f.category}] ${f.title}`).join('\n')}`,
+        });
+        summaryText = text;
+      } catch (error) {
+        console.error("Failed to generate AI summary, using default", error);
+      }
+    } else {
+      summaryText = "Excellent work! No significant architecture, security, or performance issues were found.";
+    }
+
     // Save findings to DB
     await prisma.$transaction(async (tx) => {
       // Clean up old findings if any
@@ -68,7 +85,7 @@ export async function runReviewEngine(reviewId: string, diff: string) {
         data: {
           status: "COMPLETED",
           overallScore,
-          summary: `Completed review with ${allFindings.length} findings.`,
+          summary: summaryText,
         },
       });
     });

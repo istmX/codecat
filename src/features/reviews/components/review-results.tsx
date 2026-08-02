@@ -20,9 +20,41 @@ export function ReviewResults({ pr }: Props) {
     );
   }
 
+  const generateMasterPrompt = () => {
+    if (!pr.findings || pr.findings.length === 0) return "";
+    let prompt = "I am reviewing my pull request. Please help me fix the following issues found by the code reviewer:\n\n";
+    pr.findings.forEach((f, i) => {
+      prompt += `${i + 1}. [${f.category}] ${f.title}\n`;
+      if (f.filePath) prompt += `File: ${f.filePath}${f.lineStart ? `:${f.lineStart}` : ''}\n`;
+      prompt += `Description: ${f.description}\n\n`;
+    });
+    return prompt;
+  };
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    alert("Prompt copied to clipboard!"); // Simple feedback for now
+  };
+
   // Placeholder for COMPLETED state (will be hydrated with real data later)
   return (
     <div className="mt-8 space-y-6">
+      {pr.findings && pr.findings.length > 0 && (
+        <div className="p-5 rounded-lg border border-primary/20 bg-primary/5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-semibold text-primary">Master Prompt</h3>
+            <button 
+              onClick={() => handleCopy(generateMasterPrompt())}
+              className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+            >
+              Copy Master Prompt
+            </button>
+          </div>
+          <p className="text-sm text-foreground/80 mb-2">
+            Paste this prompt into your favorite AI coding assistant (like Claude, ChatGPT, or Cursor) to fix all these issues at once.
+          </p>
+        </div>
+      )}
       <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg border border-border">
         <div className="flex items-center gap-2">
           <Info className="w-5 h-5 text-muted-foreground" />
@@ -104,10 +136,33 @@ export function ReviewResults({ pr }: Props) {
               <p className="text-foreground mb-4 text-sm">{finding.description}</p>
               
               {finding.codeSnippet && (
-                <div className="bg-muted p-4 rounded text-sm font-mono text-muted-foreground overflow-x-auto">
+                <div className="bg-muted p-4 rounded text-sm font-mono text-muted-foreground overflow-x-auto mb-4">
                   <pre>{finding.codeSnippet}</pre>
                 </div>
               )}
+
+              <details className="group border border-border rounded-md mt-2">
+                <summary className="px-4 py-2 text-sm font-medium cursor-pointer bg-muted/30 hover:bg-muted/50 transition-colors list-none flex justify-between items-center">
+                  <span>View AI Fix Prompt</span>
+                  <span className="text-muted-foreground group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <div className="p-4 border-t border-border bg-muted/10 text-sm">
+                  <div className="flex justify-end mb-2">
+                    <button 
+                      onClick={() => handleCopy(`Please fix this issue in file ${finding.filePath || 'the codebase'}:\n\nTitle: ${finding.title}\nDescription: ${finding.description}\n\n${finding.codeSnippet ? `Context:\n${finding.codeSnippet}\n` : ''}`)}
+                      className="px-3 py-1 text-xs bg-secondary text-secondary-foreground rounded hover:bg-secondary/80 transition-colors"
+                    >
+                      Copy Prompt
+                    </button>
+                  </div>
+                  <pre className="whitespace-pre-wrap text-muted-foreground font-mono text-xs p-3 bg-card border border-border rounded">
+                    Please fix this issue in file {finding.filePath || 'the codebase'}:{"\n\n"}
+                    Title: {finding.title}{"\n"}
+                    Description: {finding.description}{"\n"}
+                    {finding.codeSnippet && `\nContext:\n${finding.codeSnippet}`}
+                  </pre>
+                </div>
+              </details>
             </div>
           ))
         )}

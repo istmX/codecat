@@ -48,6 +48,7 @@ export async function getPullRequestWithStatus(owner: string, repo: string, numb
     createdAt: pr.created_at,
     status: review ? (review.status as PullRequestWithStatus["status"]) : "UNREVIEWED",
     overallScore: review ? review.overallScore : null,
+    summary: review ? review.summary : null,
     prState: pr.merged_at ? "merged" : pr.state === "closed" ? "closed" : "open",
     findings: review ? review.findings : [],
     filesProcessed: review ? review.filesProcessed : undefined,

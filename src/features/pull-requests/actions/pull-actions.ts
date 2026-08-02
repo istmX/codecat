@@ -38,6 +38,7 @@ export async function getPullRequestsWithStatus(owner: string, repo: string): Pr
         pullNumber: true,
         status: true,
         overallScore: true,
+        summary: true,
       },
     });
 
@@ -63,6 +64,7 @@ export async function getPullRequestsWithStatus(owner: string, repo: string): Pr
       createdAt: pr.created_at,
       status: review ? review.status : "UNREVIEWED",
       overallScore: review ? review.overallScore : null,
+      summary: review ? review.summary : null,
       prState: pr.merged_at ? "merged" : pr.state === "closed" ? "closed" : "open",
     };
   });
