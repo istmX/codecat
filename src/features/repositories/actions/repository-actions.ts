@@ -53,58 +53,7 @@ export async function getRepositories(): Promise<{ repositories: RepositoryWithS
   };
 }
 
-export async function connectRepository(repoId: number) {
-  const session = await auth();
-  if (!session?.userId || !session.accessToken) {
-    throw new Error("Unauthorized");
-  }
-
-  const githubClient = new GitHubClient(session.accessToken);
-  
-  // Find the repo details from GitHub to save to DB
-  const repos = await githubClient.getUserRepositories();
-  const repo = repos.find((r) => r.id === repoId);
-
-  if (!repo) {
-    throw new Error("Repository not found on GitHub");
-  }
-
-  await prisma.repository.create({
-    data: {
-      githubId: repo.id,
-      name: repo.name,
-      fullName: repo.full_name,
-      owner: repo.owner.login,
-      description: repo.description,
-      isPrivate: repo.private,
-      url: repo.html_url,
-      language: repo.language,
-      userId: session.userId,
-    },
-  });
-
-  revalidatePath("/repositories");
-  revalidatePath("/dashboard");
-}
-
-export async function disconnectRepository(githubId: number) {
-  const session = await auth();
-  if (!session?.userId) {
-    throw new Error("Unauthorized");
-  }
-
-  await prisma.repository.deleteMany({
-    where: {
-      githubId,
-      userId: session.userId, // Ensure user owns the connection
-    },
-  });
-
-  revalidatePath("/repositories");
-  revalidatePath("/dashboard");
-}
-
-export async function getRepository(owner: string, repo: string): Promise<RepositoryWithStatus> {
+export async function autoSyncRepository(owner: string, repo: string): Promise<RepositoryWithStatus> {
   const session = await auth();
   if (!session?.userId || !session.accessToken) {
     throw new Error("Unauthorized");
@@ -113,16 +62,34 @@ export async function getRepository(owner: string, repo: string): Promise<Reposi
   const githubClient = new GitHubClient(session.accessToken);
   const githubRepo = await githubClient.getRepository(owner, repo);
 
-  const dbRepo = await prisma.repository.findFirst({
+  const dbRepo = await prisma.repository.upsert({
     where: {
       githubId: githubRepo.id,
-      userId: session.userId,
     },
-    select: { id: true },
+    update: {
+      name: githubRepo.name,
+      fullName: githubRepo.full_name,
+      owner: githubRepo.owner.login,
+      description: githubRepo.description,
+      isPrivate: githubRepo.private,
+      url: githubRepo.html_url,
+      language: githubRepo.language,
+    },
+    create: {
+      githubId: githubRepo.id,
+      name: githubRepo.name,
+      fullName: githubRepo.full_name,
+      owner: githubRepo.owner.login,
+      description: githubRepo.description,
+      isPrivate: githubRepo.private,
+      url: githubRepo.html_url,
+      language: githubRepo.language,
+      userId: session.userId,
+    }
   });
 
   return {
-    id: dbRepo?.id || String(githubRepo.id),
+    id: dbRepo.id,
     githubId: githubRepo.id,
     name: githubRepo.name,
     owner: githubRepo.owner.login,
@@ -133,6 +100,6 @@ export async function getRepository(owner: string, repo: string): Promise<Reposi
     isPrivate: githubRepo.private,
     language: githubRepo.language,
     updatedAt: githubRepo.updated_at,
-    isConnected: !!dbRepo,
+    isConnected: true,
   };
 }

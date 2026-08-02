@@ -15,6 +15,25 @@ export interface GithubRepository {
   updated_at: string;
 }
 
+export interface GithubPullRequest {
+  id: number;
+  number: number;
+  state: "open" | "closed";
+  title: string;
+  user: {
+    login: string;
+    avatar_url: string;
+  };
+  html_url: string;
+  created_at: string;
+  updated_at: string;
+  head: {
+    ref: string;
+  };
+  base: {
+    ref: string;
+  };
+}
 const GITHUB_API_URL = "https://api.github.com";
 
 export class GitHubClient {
@@ -49,5 +68,9 @@ export class GitHubClient {
 
   async getRepository(owner: string, repo: string): Promise<GithubRepository> {
     return this.fetchApi<GithubRepository>(`/repos/${owner}/${repo}`);
+  }
+
+  async getRepositoryPullRequests(owner: string, repo: string, limit: number = 30): Promise<GithubPullRequest[]> {
+    return this.fetchApi<GithubPullRequest[]>(`/repos/${owner}/${repo}/pulls?state=open&per_page=${limit}&sort=created&direction=desc`);
   }
 }

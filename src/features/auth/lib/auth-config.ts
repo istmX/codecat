@@ -8,7 +8,8 @@ export const authConfig = {
     GitHub({
       authorization: {
         params: {
-          scope: "read:user",
+          scope: "read:user repo",
+          prompt: "consent",
         },
       },
     }),

@@ -42,7 +42,9 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="h-full">
+      <body className="h-full"
+      suppressHydrationWarning
+      >
         <QueryProvider>
           {children}
         </QueryProvider>
