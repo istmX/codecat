@@ -37,11 +37,28 @@
 - Built GitHub Webhook API route to automatically trigger PR reviews on `pull_request` (`opened`, `synchronize`) events.
 - Refactored the Webhook Queue system to pre-check Rate Limits and immediately post warning comments on GitHub if the user is out of credits.
 - Fixed unhandled Next.js Server Action errors by returning clean error objects and rendering beautiful, inline Error UI States (e.g. Rate Limit warnings) without breaking the client.
+- Implemented Spec 0008: User Profile, Onboarding, and Cat Pay
+  - Added `githubAppInstalled` boolean to Prisma `User` model and ran `db push`
+  - Built `/setup` onboarding page: forces first-time users to install the GitHub App before accessing the dashboard. Uses the App JWT (`GET /users/{username}/installation`) for reliable verification instead of the user OAuth token
+  - Built `/profile` page: shows user avatar, name, email, current plan badge, GitHub App status, and sign-out option
+  - Built **Cat Pay**: mock premium checkout UI (card/dummy inputs) that fires a Server Action to upgrade `planTier` to `PRO` in the database, unlocking 100 reviews/day
+  - Updated Cat Menu (interactive mascot modal) with a new Navigation section: Dashboard, Repositories, Profile & Billing, and Sign Out with Lucide icons
+  - Reverted FREE rate limit from 1 (test value) back to 5
+  - Fixed auth guards: added `/profile` and `/setup` to the middleware protected routes list
+  - Fixed session ID bug: new pages were reading `session.user.id` (undefined) instead of the custom JWT field `session.userId`
+  - Fixed GitHub App install URL to `https://github.com/apps/codecat-ai-reviewer/installations/new`
+  - Fixed post-login redirect: after GitHub App verification, user is sent to `/dashboard` not `/`
+  - Fixed lucide-react icon compatibility: replaced `Github` and `Plug` (not in v1.28) with valid alternatives
+  - Replaced setup page emoji with Lucide icon (project rule: no emojis)
+  - Wrote feature spec to `.istm-context/specs/0008-user-profile-and-payments/index.md`
+  - Wrote verify steps to `.istm-context/specs/0008-user-profile-and-payments/verify.md`
 
 ### Pending
 
-- Build feature modules (repositories, pull-requests, reviews, diff-viewer)
-- Implement AI Review Engine with provider fallback (Groq, Mistral, Gemini)
+- Deploy to Vercel (required for production webhook delivery from GitHub)
+- Implement rate limit counting based on discrete review events (not just `Review` DB rows)
+- Add `AbortSignal` timeout and RUNNING review cleanup to the AI engine
+- `src/features/billing/` module is new — consider moving `upgradeToPro` and related actions there as billing grows
 
 ### Notes
 
@@ -53,3 +70,6 @@
 - Implemented spec 0004: PR Review Runner and Results UI
 - Implemented Spec 0006: AI Review Engine (Groq -> Mistral -> Gemini)
 - Implemented Spec 0007: Billing and rate limiting (Free Plan limits, files filtering)
+- Implemented Spec 0008: User profile, GitHub App onboarding, Cat Pay mock billing
+- `session.userId` is the correct field for the DB user ID (set via `token.sub` in the JWT callback in `auth-config.ts`). Never use `session.user.id`.
+- Webhooks only work reliably on Vercel. Codespaces ports time out under GitHub's delivery timeout.
