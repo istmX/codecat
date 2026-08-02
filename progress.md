@@ -47,3 +47,4 @@
 - No real time streaming for reviews (run all reviewers, show complete result)
 - Implemented spec 0005: Merged PRs dashboard section
 - Implemented spec 0004: PR Review Runner and Results UI
+- Implemented Spec 0006: AI Review Engine (Groq -> Mistral -> Gemini)

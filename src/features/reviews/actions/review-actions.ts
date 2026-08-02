@@ -5,6 +5,7 @@ import { GitHubClient } from "@/lib/github/client";
 import { prisma } from "@/lib/db/prisma";
 import { PullRequestWithStatus } from "@/features/pull-requests/types";
 import { revalidatePath } from "next/cache";
+import { runReviewEngine } from "@/lib/ai/engine";
 
 export async function getPullRequestWithStatus(owner: string, repo: string, number: number): Promise<PullRequestWithStatus> {
   const session = await auth();
@@ -27,6 +28,9 @@ export async function getPullRequestWithStatus(owner: string, repo: string, numb
         repositoryId: dbRepo.id,
         pullNumber: number,
       },
+      include: {
+        findings: true,
+      },
     });
   }
 
@@ -45,6 +49,7 @@ export async function getPullRequestWithStatus(owner: string, repo: string, numb
     status: review ? (review.status as any) : "UNREVIEWED",
     overallScore: review ? review.overallScore : null,
     prState: pr.merged_at ? "merged" : pr.state === "closed" ? "closed" : "open",
+    findings: review ? review.findings : [],
   };
 }
 
@@ -65,8 +70,9 @@ export async function startReview(owner: string, repo: string, number: number) {
   // Fetch the PR again to get the missing fields for creation
   const githubClient = new GitHubClient(session.accessToken);
   const pr = await githubClient.getPullRequest(owner, repo, number);
+  const diff = await githubClient.getPullRequestDiff(owner, repo, number);
 
-  await prisma.review.upsert({
+  const review = await prisma.review.upsert({
     where: {
       repositoryId_pullNumber: {
         repositoryId: dbRepo.id,
@@ -90,7 +96,6 @@ export async function startReview(owner: string, repo: string, number: number) {
 
   revalidatePath(`/repositories/${owner}/${repo}/pulls/${number}`);
 
-  // We should actually run the AI review here asynchronously in a background task
-  // But for the sake of the UI MVP, we just set it to RUNNING. 
-  // You would trigger a background queue job here.
+  // Kick off the AI review engine in the background
+  runReviewEngine(review.id, diff).catch(console.error);
 }
