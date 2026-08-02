@@ -16,7 +16,7 @@ export function ReviewResults({ pr }: Props) {
     if (pr.status === "RUNNING" || pr.status === "PENDING") {
       const interval = setInterval(() => {
         router.refresh();
-      }, 5000); // Poll every 5 seconds
+      }, 10000); // Poll every 10 seconds to avoid dev server spam
 
       return () => clearInterval(interval);
     }
