@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CodeCatLogo } from "@/components/shared/codecat-logo";
 import { cn } from "@/lib/utils/cn";
+import Link from "next/link";
+import { signOut } from "@/features/auth/actions/sign-out";
 
 const MASCOT_QUOTES = [
   "I smell a code smell...",
@@ -317,6 +319,29 @@ export function InteractiveMascot({ className }: { className?: string }) {
               
               <div className="mt-8 flex w-full flex-col p-6 gap-6 max-h-[80vh] overflow-y-auto custom-scrollbar">
                 
+                {/* Section: Navigation */}
+                <div className="w-full">
+                  <h3 className="mb-2 text-sm font-bold text-muted-foreground tracking-wider uppercase flex items-center gap-2">
+                    <span>🐈</span> Mew... Where to? ...Meow
+                  </h3>
+                  <div className="flex flex-col gap-1 rounded-lg border border-border bg-secondary/20 p-2">
+                    <Link onClick={() => setIsMenuOpen(false)} href="/dashboard" className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
+                      Dashboard
+                    </Link>
+                    <Link onClick={() => setIsMenuOpen(false)} href="/repositories" className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
+                      Repositories
+                    </Link>
+                    <Link onClick={() => setIsMenuOpen(false)} href="/profile" className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors text-left">
+                      Profile & Billing
+                    </Link>
+                    <form action={signOut} className="w-full">
+                      <button type="submit" className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-red-500 hover:bg-red-500/10 transition-colors text-left">
+                        Sign Out
+                      </button>
+                    </form>
+                  </div>
+                </div>
+
                 {/* Section: What's New */}
                 <div className="w-full">
                   <h3 className="mb-2 text-sm font-bold text-muted-foreground tracking-wider uppercase flex items-center gap-2">

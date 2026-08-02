@@ -11,7 +11,21 @@ export const metadata = {
   description: "Manage your connected repositories.",
 };
 
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { prisma as db } from "@/lib/db/prisma";
+
 export default async function RepositoriesPage() {
+  const session = await auth();
+  if (session?.user?.id) {
+    const dbUser = await db.user.findUnique({
+      where: { id: session.user.id },
+      select: { githubAppInstalled: true }
+    });
+    if (!dbUser?.githubAppInstalled) {
+      redirect("/setup");
+    }
+  }
   const { repositories, hasRepoAccess } = await getRepositories();
 
   return (

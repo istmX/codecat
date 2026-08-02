@@ -4,6 +4,7 @@ import { InteractiveMascot } from "@/components/shared/interactive-mascot";
 import { FolderGit2 } from "lucide-react";
 import Link from "next/link";
 import { ROUTES } from "@/lib/utils/constants";
+import { redirect } from "next/navigation";
 import * as motion from "framer-motion/client";
 import { getRepositories } from "@/features/repositories/actions/repository-actions";
 import { RepositoryListItem } from "@/features/repositories/components/repository-list-item";
@@ -13,6 +14,15 @@ export default async function DashboardPage() {
   
   if (!session?.userId) {
     return null; 
+  }
+
+  const dbUser = await prisma.user.findUnique({
+    where: { id: session.userId },
+    select: { githubAppInstalled: true }
+  });
+
+  if (!dbUser?.githubAppInstalled) {
+    redirect("/setup");
   }
 
   const { repositories, hasRepoAccess } = await getRepositories();

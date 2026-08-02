@@ -129,7 +129,7 @@ export class GitHubClient {
         issue_number: issueNumber,
         body,
       });
-      return { id: res.data.id, html_url: res.data.html_url };
+      return { id: Number(res.data.id), html_url: res.data.html_url };
     }
 
     return this.fetchApi<{ id: number; html_url: string }>(`/repos/${owner}/${repo}/issues/${issueNumber}/comments`, {
@@ -147,7 +147,7 @@ export class GitHubClient {
         comment_id: commentId,
         body,
       });
-      return { id: res.data.id, html_url: res.data.html_url };
+      return { id: Number(res.data.id), html_url: res.data.html_url };
     }
 
     return this.fetchApi<{ id: number; html_url: string }>(`/repos/${owner}/${repo}/issues/comments/${commentId}`, {
