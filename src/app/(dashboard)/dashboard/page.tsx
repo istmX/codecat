@@ -5,6 +5,8 @@ import { FolderGit2 } from "lucide-react";
 import Link from "next/link";
 import { ROUTES } from "@/lib/utils/constants";
 import * as motion from "framer-motion/client";
+import { getRepositories } from "@/features/repositories/actions/repository-actions";
+import { RepositoryListItem } from "@/features/repositories/components/repository-list-item";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -12,6 +14,8 @@ export default async function DashboardPage() {
   if (!session?.userId) {
     return null; 
   }
+
+  const { repositories, hasRepoAccess } = await getRepositories();
 
   const repoCount = await prisma.repository.count({
     where: { userId: session.userId }
@@ -72,10 +76,14 @@ export default async function DashboardPage() {
         </div>
 
         <div>
-          <h3 className="text-lg font-medium text-foreground">
-            Recent Activity
+          <h3 className="text-lg font-medium text-foreground mb-4">
+            Recently Active
           </h3>
-          {/* Real dashboard goes here later */}
+          <div className="flex flex-col rounded-lg border border-border bg-card overflow-hidden">
+            {repositories.filter(repo => repo.isConnected).slice(0, 3).map(repo => (
+              <RepositoryListItem key={repo.id} repository={repo} />
+            ))}
+          </div>
         </div>
       </div>
     </>

@@ -71,9 +71,35 @@ export function InteractiveMascot({ className }: { className?: string }) {
         }, 3000);
       }
     };
+
+    const handleHappyEvent = () => {
+      setQuote("Yay! A new repository to review! 🚀");
+      setShowQuote(true);
+      setIsWalking(true);
+      setTimeout(() => {
+        setShowQuote(false);
+        setIsWalking(false);
+      }, 4000);
+    };
+
+    const handleSadEvent = () => {
+      setQuote("Why did you remove me? 😿");
+      setShowQuote(true);
+      setIsWalking(false);
+      // Optional: shake animation by moving position slightly back and forth
+      setTimeout(() => {
+        setShowQuote(false);
+      }, 4000);
+    };
     
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("codecat-happy", handleHappyEvent);
+    window.addEventListener("codecat-sad", handleSadEvent);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("codecat-happy", handleHappyEvent);
+      window.removeEventListener("codecat-sad", handleSadEvent);
+    };
   }, [isMounted]);
 
   const moveRandomly = useCallback(() => {

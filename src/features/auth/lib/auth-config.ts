@@ -8,7 +8,7 @@ export const authConfig = {
     GitHub({
       authorization: {
         params: {
-          scope: "read:user repo",
+          scope: "read:user",
         },
       },
     }),
@@ -33,6 +33,9 @@ export const authConfig = {
       if (account?.access_token) {
         token.accessToken = account.access_token;
       }
+      if (account?.scope) {
+        token.scope = account.scope;
+      }
       return token;
     },
     async session({ session, token }) {
@@ -42,6 +45,9 @@ export const authConfig = {
       }
       if (token.sub) {
         session.userId = token.sub;
+      }
+      if (token.scope) {
+        session.scope = token.scope as string;
       }
       return session;
     },
